@@ -1,0 +1,343 @@
+<div class="resume-container">
+  <header class="app-header">
+    <h1>📄 Resume Builder</h1>
+    <div class="header-actions">
+      <input type="file" #fileInput (change)="loadResume($event)" accept=".json" style="display: none;">
+      <button type="button" class="btn-secondary" (click)="fileInput.click()">📁 Load Resume</button>
+      <button type="button" class="btn-primary" (click)="saveResume()">💾 Save Resume</button>
+    </div>
+  </header>
+
+  <nav class="section-nav">
+    <button 
+      *ngFor="let section of sections" 
+      class="nav-btn"
+      [class.active]="currentSection === section.id"
+      (click)="setSection(section.id)">
+      <span class="nav-icon">{{ section.icon }}</span>
+      <span class="nav-text">{{ section.name }}</span>
+    </button>
+  </nav>
+
+  <main class="content">
+    <!-- Personal Information Section -->
+    <section *ngIf="currentSection === 'personal'" class="form-section">
+      <h2>👤 Personal Information</h2>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Full Name</label>
+          <div *ngIf="!isEditMode('name')" class="display-field" (click)="toggleEdit('name')">
+            {{ resume.name || 'Click to edit' }}
+          </div>
+          <input *ngIf="isEditMode('name')" 
+                 type="text" 
+                 [(ngModel)]="resume.name"
+                 (blur)="toggleEdit('name')"
+                 placeholder="Enter your full name">
+        </div>
+
+        <div class="form-group">
+          <label>Position</label>
+          <div *ngIf="!isEditMode('position')" class="display-field" (click)="toggleEdit('position')">
+            {{ resume.possition || 'Click to edit' }}
+          </div>
+          <input *ngIf="isEditMode('position')" 
+                 type="text" 
+                 [(ngModel)]="resume.possition"
+                 (blur)="toggleEdit('position')"
+                 placeholder="e.g., Technical Leader">
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <div *ngIf="!isEditMode('email')" class="display-field" (click)="toggleEdit('email')">
+            {{ resume.email || 'Click to edit' }}
+          </div>
+          <input *ngIf="isEditMode('email')" 
+                 type="email" 
+                 [(ngModel)]="resume.email"
+                 (blur)="toggleEdit('email')"
+                 placeholder="your.email@example.com">
+        </div>
+
+        <div class="form-group">
+          <label>Telephone</label>
+          <div *ngIf="!isEditMode('telephone')" class="display-field" (click)="toggleEdit('telephone')">
+            {{ resume.telephone || 'Click to edit' }}
+          </div>
+          <input *ngIf="isEditMode('telephone')" 
+                 type="tel" 
+                 [(ngModel)]="resume.telephone"
+                 (blur)="toggleEdit('telephone')"
+                 placeholder="+1 234 567 8900">
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+          <div *ngIf="!isEditMode('location')" class="display-field" (click)="toggleEdit('location')">
+            {{ resume.location || 'Click to edit' }}
+          </div>
+          <input *ngIf="isEditMode('location')" 
+                 type="text" 
+                 [(ngModel)]="resume.location"
+                 (blur)="toggleEdit('location')"
+                 placeholder="City, Country">
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label>Professional Presentation</label>
+        <div *ngIf="!isEditMode('presentation')" class="display-field rich-text" (click)="toggleEdit('presentation')">
+          <div [innerHTML]="resume.presentation || 'Click to edit your professional presentation'"></div>
+        </div>
+        <textarea *ngIf="isEditMode('presentation')" 
+                  [(ngModel)]="resume.presentation"
+                  (blur)="toggleEdit('presentation')"
+                  rows="8"
+                  placeholder="Write your professional presentation with HTML tags for formatting..."></textarea>
+      </div>
+    </section>
+
+    <!-- Social Media Section -->
+    <section *ngIf="currentSection === 'social'" class="form-section">
+      <h2>🌐 Social Media & Links</h2>
+      
+      <div class="add-form">
+        <h3>Add New Social Media</h3>
+        <div class="form-row">
+          <input type="text" [(ngModel)]="newSocialMedia.name" placeholder="Platform name (e.g., LinkedIn)">
+          <input type="url" [(ngModel)]="newSocialMedia.url" placeholder="https://...">
+          <button type="button" (click)="addSocialMedia()">Add</button>
+        </div>
+      </div>
+
+      <div class="items-list">
+        <div *ngFor="let social of resume.socialmedias; let i = index" class="item-card">
+          <div class="item-content">
+            <strong>{{ social.name }}</strong>
+            <a [href]="social.url" target="_blank">{{ social.url }}</a>
+          </div>
+          <button class="delete-btn" (click)="removeSocialMedia(i)">🗑️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section *ngIf="currentSection === 'skills'" class="form-section">
+      <h2>💪 Skills & Technologies</h2>
+      
+      <div class="add-form">
+        <h3>Add New Skill</h3>
+        <div class="form-row">
+          <input type="text" [(ngModel)]="newSkill.name" placeholder="Skill name (e.g., Java, Python)">
+          <input type="range" [(ngModel)]="newSkill.value" min="0" max="100" step="5">
+          <span class="range-value">{{ newSkill.value }}%</span>
+          <button type="button" (click)="addSkill()">Add</button>
+        </div>
+      </div>
+
+      <div class="skills-grid">
+        <div *ngFor="let skill of resume.skills; let i = index" class="skill-card">
+          <div class="skill-header">
+            <strong>{{ skill.name }}</strong>
+            <span class="skill-percentage">{{ skill.value }}%</span>
+            <button class="delete-btn" (click)="removeSkill(i)">🗑️</button>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" [style.width.%]="skill.value"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Languages Section -->
+    <section *ngIf="currentSection === 'languages'" class="form-section">
+      <h2>🗣️ Languages</h2>
+      
+      <div class="add-form">
+        <h3>Add New Language</h3>
+        <div class="form-row">
+          <input type="text" [(ngModel)]="newLanguage.name" placeholder="Language name">
+          <input type="range" [(ngModel)]="newLanguage.value" min="0" max="100" step="10">
+          <span class="range-value">{{ newLanguage.value }}%</span>
+          <button type="button" (click)="addLanguage()">Add</button>
+        </div>
+      </div>
+
+      <div class="skills-grid">
+        <div *ngFor="let language of resume.languages; let i = index" class="skill-card">
+          <div class="skill-header">
+            <strong>{{ language.name }}</strong>
+            <span class="skill-percentage">{{ language.value }}%</span>
+            <button class="delete-btn" (click)="removeLanguage(i)">🗑️</button>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" [style.width.%]="language.value"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section *ngIf="currentSection === 'experience'" class="form-section">
+      <h2>💼 Professional Experience</h2>
+      
+      <button type="button" class="btn-add" (click)="addHistorical()">+ Add Company Experience</button>
+
+      <div *ngFor="let historical of resume.historicals; let hi = index" class="experience-card">
+        <div class="experience-header">
+          <input type="text" [(ngModel)]="historical.company" placeholder="Company Name" class="company-input">
+          <div class="date-range">
+            <input type="date" [(ngModel)]="historical.start">
+            <span>to</span>
+            <input type="date" [(ngModel)]="historical.end">
+          </div>
+          <button class="delete-btn" (click)="removeHistorical(hi)">🗑️</button>
+        </div>
+
+        <div class="experience-content">
+          <div class="form-group">
+            <label>Technical Details</label>
+            <textarea [(ngModel)]="historical.tecnical" 
+                      rows="4" 
+                      placeholder="Detailed technical information (supports HTML)"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Management Experience</label>
+            <textarea [(ngModel)]="historical.manager" 
+                      rows="4" 
+                      placeholder="Management and leadership experience (supports HTML)"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Technical Summary</label>
+              <textarea [(ngModel)]="historical.tecnical_short" 
+                        rows="2" 
+                        placeholder="Brief technical summary"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Management Summary</label>
+              <textarea [(ngModel)]="historical.manager_short" 
+                        rows="2" 
+                        placeholder="Brief management summary"></textarea>
+            </div>
+          </div>
+
+          <!-- Projects within this company -->
+          <div class="projects-section">
+            <h4>Projects at {{ historical.company }}</h4>
+            <button type="button" class="btn-add-small" (click)="addProject(hi)">+ Add Project</button>
+
+            <div *ngFor="let project of historical.projects; let pi = index" class="project-card">
+              <div class="project-header">
+                <input type="text" [(ngModel)]="project.name" placeholder="Project Name" class="project-name">
+                <div class="date-range">
+                  <input type="date" [(ngModel)]="project.start">
+                  <span>to</span>
+                  <input type="date" [(ngModel)]="project.end">
+                </div>
+                <button class="delete-btn" (click)="removeProject(hi, pi)">🗑️</button>
+              </div>
+
+              <div class="project-content">
+                <div class="form-group">
+                  <label>Effect/Impact</label>
+                  <input type="text" [(ngModel)]="project.effect" placeholder="Brief impact description">
+                </div>
+
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea [(ngModel)]="project.description" 
+                            rows="3" 
+                            placeholder="Project description (supports HTML)"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Technical Details</label>
+                  <textarea [(ngModel)]="project.tecnicalProj" 
+                            rows="3" 
+                            placeholder="Technical implementation details (supports HTML)"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Responsibilities</label>
+                  <textarea [(ngModel)]="project.responsibilities" 
+                            rows="3" 
+                            placeholder="Your responsibilities (supports HTML)"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Achievements</label>
+                  <textarea [(ngModel)]="project.achivements" 
+                            rows="3" 
+                            placeholder="Key achievements (supports HTML)"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education Section -->
+    <section *ngIf="currentSection === 'education'" class="form-section">
+      <h2>🎓 Education</h2>
+      
+      <div class="add-form">
+        <h3>Add Education</h3>
+        <div class="form-grid">
+          <input type="text" [(ngModel)]="newEducation.school" placeholder="School/University">
+          <input type="text" [(ngModel)]="newEducation.degree" placeholder="Degree/Program">
+          <input type="date" [(ngModel)]="newEducation.start" placeholder="Start Date">
+          <input type="date" [(ngModel)]="newEducation.end" placeholder="End Date">
+          <button type="button" (click)="addEducation()">Add Education</button>
+        </div>
+      </div>
+
+      <div class="items-list">
+        <div *ngFor="let education of resume.educations; let i = index" class="item-card">
+          <div class="item-content">
+            <h4>{{ education.degree }}</h4>
+            <p><strong>{{ education.school }}</strong></p>
+            <p class="dates">{{ education.start | date:'yyyy' }} - {{ education.end | date:'yyyy' }}</p>
+          </div>
+          <button class="delete-btn" (click)="removeEducation(i)">🗑️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Certificates Section -->
+    <section *ngIf="currentSection === 'certificates'" class="form-section">
+      <h2>📜 Certificates & Credentials</h2>
+      
+      <div class="add-form">
+        <h3>Add Certificate</h3>
+        <div class="form-grid">
+          <input type="text" [(ngModel)]="newCertificate.name" placeholder="Certificate Name">
+          <input type="text" [(ngModel)]="newCertificate.institute" placeholder="Issuing Institute">
+          <input type="text" [(ngModel)]="newCertificate.credential" placeholder="Credential ID">
+          <input type="date" [(ngModel)]="newCertificate.issued" placeholder="Issue Date">
+          <input type="url" [(ngModel)]="newCertificate.url" placeholder="Verification URL">
+          <button type="button" (click)="addCertificate()">Add Certificate</button>
+        </div>
+      </div>
+
+      <div class="items-list">
+        <div *ngFor="let certificate of resume.certificates; let i = index" class="item-card">
+          <div class="item-content">
+            <h4>{{ certificate.name }}</h4>
+            <p><strong>{{ certificate.institute }}</strong></p>
+            <p *ngIf="certificate.credential" class="credential">ID: {{ certificate.credential }}</p>
+            <p class="dates">Issued: {{ certificate.issued | date:'mediumDate' }}</p>
+            <a *ngIf="certificate.url" [href]="certificate.url" target="_blank">🔗 Verify</a>
+          </div>
+          <button class="delete-btn" (click)="removeCertificate(i)">🗑️</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

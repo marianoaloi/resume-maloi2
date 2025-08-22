@@ -1,0 +1,50 @@
+{
+  "name": "resume-maloi2",
+  "version": "1.0.0",
+  "description": "Curriculum vitae application to create an complex object by this project.",
+  "main": "main.js",
+  "scripts": {
+    "electron": "electron .",
+    "electron-dev": "cross-env NODE_ENV=development electron .",
+    "angular-build": "cd angular-app && ng build --base-href ./",
+    "angular-serve": "cd angular-app && ng serve --port 4202",
+    "build": "npm run angular-build && electron-builder",
+    "start": "concurrently \"npm run angular-serve\" \"npm run electron-dev\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "cross-env": "^10.0.0",
+    "electron": "^37.3.1",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+  },
+  "build": {
+    "appId": "com.resume.maloi",
+    "productName": "Resume Builder",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "img/**/*",
+      "angular-app/dist/**/*"
+    ],
+    "win": {
+      "icon": "img/favicon.ico",
+      "target": "nsis"
+    },
+    "mac": {
+      "icon": "img/favicon.ico",
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "icon": "img/favicon.ico",
+      "target": "AppImage"
+    }
+  }
+}
