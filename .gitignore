@@ -119,3 +119,5 @@ angular-app/.angular/
 
 # Package-lock files (uncomment if using yarn exclusively)
 # package-lock.json
+angular-app/src/environments/environment.prod.ts
+angular-app/src/environments/environment.ts

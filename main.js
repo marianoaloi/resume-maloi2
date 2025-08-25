@@ -19,7 +19,7 @@ function createWindow() {
   const isDev = process.env.NODE_ENV === 'development';
   
   if (isDev) {
-    mainWindow.loadURL('http://localhost:4202');
+    mainWindow.loadURL('http://localhost:4200');
     mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile(path.join(__dirname, 'angular-app/dist/angular-app/browser/index.html'));

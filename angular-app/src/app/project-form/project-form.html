@@ -88,14 +88,10 @@
 
       <div class="form-group full-width">
         <label>Professional Presentation</label>
-        <div *ngIf="!isEditMode('presentation')" class="display-field rich-text" (click)="toggleEdit('presentation')">
-          <div [innerHTML]="resume.presentation || 'Click to edit your professional presentation'"></div>
-        </div>
-        <textarea *ngIf="isEditMode('presentation')" 
-                  [(ngModel)]="resume.presentation"
-                  (blur)="toggleEdit('presentation')"
-                  rows="8"
-                  placeholder="Write your professional presentation with HTML tags for formatting..."></textarea>
+        <app-html-editor
+          [(content)]="resume.presentation"
+          placeholder="Click to edit your professional presentation">
+        </app-html-editor>
       </div>
     </section>
 
@@ -199,31 +195,35 @@
         <div class="experience-content">
           <div class="form-group">
             <label>Technical Details</label>
-            <textarea [(ngModel)]="historical.tecnical" 
-                      rows="4" 
-                      placeholder="Detailed technical information (supports HTML)"></textarea>
+            <app-html-editor
+              [(content)]="historical.tecnical"
+              placeholder="Detailed technical information">
+            </app-html-editor>
           </div>
 
           <div class="form-group">
             <label>Management Experience</label>
-            <textarea [(ngModel)]="historical.manager" 
-                      rows="4" 
-                      placeholder="Management and leadership experience (supports HTML)"></textarea>
+            <app-html-editor
+              [(content)]="historical.manager"
+              placeholder="Management and leadership experience">
+            </app-html-editor>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label>Technical Summary</label>
-              <textarea [(ngModel)]="historical.tecnical_short" 
-                        rows="2" 
-                        placeholder="Brief technical summary"></textarea>
+              <app-html-editor
+                [(content)]="historical.tecnical_short"
+                placeholder="Brief technical summary">
+              </app-html-editor>
             </div>
 
             <div class="form-group">
               <label>Management Summary</label>
-              <textarea [(ngModel)]="historical.manager_short" 
-                        rows="2" 
-                        placeholder="Brief management summary"></textarea>
+              <app-html-editor
+                [(content)]="historical.manager_short"
+                placeholder="Brief management summary">
+              </app-html-editor>
             </div>
           </div>
 
@@ -251,30 +251,34 @@
 
                 <div class="form-group">
                   <label>Description</label>
-                  <textarea [(ngModel)]="project.description" 
-                            rows="3" 
-                            placeholder="Project description (supports HTML)"></textarea>
+                  <app-html-editor
+                    [(content)]="project.description"
+                    placeholder="Project description">
+                  </app-html-editor>
                 </div>
 
                 <div class="form-group">
                   <label>Technical Details</label>
-                  <textarea [(ngModel)]="project.tecnicalProj" 
-                            rows="3" 
-                            placeholder="Technical implementation details (supports HTML)"></textarea>
+                  <app-html-editor
+                    [(content)]="project.tecnicalProj"
+                    placeholder="Technical implementation details">
+                  </app-html-editor>
                 </div>
 
                 <div class="form-group">
                   <label>Responsibilities</label>
-                  <textarea [(ngModel)]="project.responsibilities" 
-                            rows="3" 
-                            placeholder="Your responsibilities (supports HTML)"></textarea>
+                  <app-html-editor
+                    [(content)]="project.responsibilities"
+                    placeholder="Your responsibilities">
+                  </app-html-editor>
                 </div>
 
                 <div class="form-group">
                   <label>Achievements</label>
-                  <textarea [(ngModel)]="project.achivements" 
-                            rows="3" 
-                            placeholder="Key achievements (supports HTML)"></textarea>
+                  <app-html-editor
+                    [(content)]="project.achivements"
+                    placeholder="Key achievements">
+                  </app-html-editor>
                 </div>
               </div>
             </div>

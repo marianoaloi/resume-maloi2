@@ -7,7 +7,7 @@
     "electron": "electron .",
     "electron-dev": "cross-env NODE_ENV=development electron .",
     "angular-build": "cd angular-app && ng build --base-href ./",
-    "angular-serve": "cd angular-app && ng serve --port 4202",
+    "angular-serve": "cd angular-app && ng serve --port 4200",
     "build": "npm run angular-build && electron-builder",
     "start": "concurrently \"npm run angular-serve\" \"npm run electron-dev\""
   },

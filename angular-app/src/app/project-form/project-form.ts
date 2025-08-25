@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HtmlEditor } from '../html-editor/html-editor';
 import { 
   Resume, 
   SocialMedia, 
@@ -14,7 +15,7 @@ import {
 
 @Component({
   selector: 'app-project-form',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HtmlEditor],
   templateUrl: './project-form.html',
   styleUrl: './project-form.css'
 })

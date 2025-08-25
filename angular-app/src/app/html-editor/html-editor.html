@@ -1,0 +1,16 @@
+<div class="html-editor">
+  <!-- Display Mode -->
+  <div *ngIf="!isEditMode" class="display-field" (click)="toggleEditMode()">
+    <div [innerHTML]="content || placeholder"></div>
+  </div>
+  
+  <!-- Edit Mode -->
+  <div *ngIf="isEditMode" class="edit-field">
+    <editor [apiKey]="apiKeyTyce"
+      [init]="init"
+      [(ngModel)]="content"
+      (ngModelChange)="onContentChange($event)"
+      (onBlur)="onBlur()">
+    </editor>
+  </div>
+</div>

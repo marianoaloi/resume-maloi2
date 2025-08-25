@@ -1,0 +1,49 @@
+.html-editor {
+  width: 100%;
+}
+
+.display-field {
+  min-height: 40px;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1.5;
+}
+
+.display-field:hover {
+  background-color: #f0f0f0;
+  border-color: #d0d0d0;
+}
+
+.display-field:empty::before {
+  content: attr(data-placeholder);
+  color: #999;
+  font-style: italic;
+}
+
+.edit-field {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.edit-field .tox-tinymce {
+  border: none !important;
+}
+
+/* Custom TinyMCE styling */
+.tox .tox-toolbar__primary {
+  background: #f8f9fa !important;
+  border-bottom: 1px solid #e9ecef !important;
+}
+
+.tox .tox-edit-area {
+  border: none !important;
+}
+
+.tox .tox-statusbar {
+  display: none !important;
+}
