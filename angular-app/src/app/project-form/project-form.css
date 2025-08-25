@@ -525,4 +525,109 @@ input[type="range"]::-moz-range-thumb {
   .skills-grid {
     grid-template-columns: 1fr;
   }
+  
+  .company-tabs {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .company-tab {
+    justify-content: space-between;
+    padding: 12px;
+  }
+  
+  .company-name {
+    max-width: none;
+  }
+}
+
+/* Company Tabs Styling */
+.experience-tabs-container {
+  margin-top: 20px;
+}
+
+.company-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+.company-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  font-size: 14px;
+  color: #495057;
+}
+
+.company-tab:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.company-tab.active {
+  background: #667eea;
+  border-color: #667eea;
+  color: white;
+}
+
+.company-tab.active .delete-tab-btn {
+  color: white;
+  background: rgba(255,255,255,0.2);
+}
+
+.company-name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.delete-tab-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.delete-tab-btn:hover {
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+.company-content {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: 15px;
+}
+
+.no-companies {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 20px;
 }

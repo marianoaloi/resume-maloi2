@@ -181,109 +181,135 @@
       
       <button type="button" class="btn-add" (click)="addHistorical()">+ Add Company Experience</button>
 
-      <div *ngFor="let historical of resume.historicals; let hi = index" class="experience-card">
-        <div class="experience-header">
-          <input type="text" [(ngModel)]="historical.company" placeholder="Company Name" class="company-input">
-          <div class="date-range">
-            <input type="date" [(ngModel)]="historical.start">
-            <span>to</span>
-            <input type="date" [(ngModel)]="historical.end">
-          </div>
-          <button class="delete-btn" (click)="removeHistorical(hi)">🗑️</button>
+      <div *ngIf="resume.historicals.length > 0" class="experience-tabs-container">
+        <!-- Company Tabs -->
+        <div class="company-tabs">
+          <button 
+            *ngFor="let historical of resume.historicals; let i = index"
+            class="company-tab"
+            [class.active]="currentCompanyIndex === i"
+            (click)="setCurrentCompany(i)">
+            <span class="company-name">{{ historical.company || 'Company ' + (i + 1) }}</span>
+            <button class="delete-tab-btn" (click)="removeHistorical(i); $event.stopPropagation()">×</button>
+          </button>
         </div>
 
-        <div class="experience-content">
-          <div class="form-group">
-            <label>Technical Details</label>
-            <app-html-editor
-              [(content)]="historical.tecnical"
-              placeholder="Detailed technical information">
-            </app-html-editor>
-          </div>
-
-          <div class="form-group">
-            <label>Management Experience</label>
-            <app-html-editor
-              [(content)]="historical.manager"
-              placeholder="Management and leadership experience">
-            </app-html-editor>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Technical Summary</label>
-              <app-html-editor
-                [(content)]="historical.tecnical_short"
-                placeholder="Brief technical summary">
-              </app-html-editor>
-            </div>
-
-            <div class="form-group">
-              <label>Management Summary</label>
-              <app-html-editor
-                [(content)]="historical.manager_short"
-                placeholder="Brief management summary">
-              </app-html-editor>
-            </div>
-          </div>
-
-          <!-- Projects within this company -->
-          <div class="projects-section">
-            <h4>Projects at {{ historical.company }}</h4>
-            <button type="button" class="btn-add-small" (click)="addProject(hi)">+ Add Project</button>
-
-            <div *ngFor="let project of historical.projects; let pi = index" class="project-card">
-              <div class="project-header">
-                <input type="text" [(ngModel)]="project.name" placeholder="Project Name" class="project-name">
+        <!-- Selected Company Content -->
+        <div *ngIf="getCurrentCompany()" class="company-content">
+          <div class="experience-header">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" [(ngModel)]="getCurrentCompany().company" placeholder="Company Name" class="company-input">
+              </div>
+              <div class="form-group">
+                <label>Employment Period</label>
                 <div class="date-range">
-                  <input type="date" [(ngModel)]="project.start">
+                  <input type="date" [(ngModel)]="getCurrentCompany().start">
                   <span>to</span>
-                  <input type="date" [(ngModel)]="project.end">
+                  <input type="date" [(ngModel)]="getCurrentCompany().end">
                 </div>
-                <button class="delete-btn" (click)="removeProject(hi, pi)">🗑️</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="experience-content">
+            <div class="form-group">
+              <label>Technical Details</label>
+              <app-html-editor
+                [(content)]="getCurrentCompany().tecnical"
+                placeholder="Detailed technical information">
+              </app-html-editor>
+            </div>
+
+            <div class="form-group">
+              <label>Management Experience</label>
+              <app-html-editor
+                [(content)]="getCurrentCompany().manager"
+                placeholder="Management and leadership experience">
+              </app-html-editor>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Technical Summary</label>
+                <app-html-editor
+                  [(content)]="getCurrentCompany().tecnical_short"
+                  placeholder="Brief technical summary">
+                </app-html-editor>
               </div>
 
-              <div class="project-content">
-                <div class="form-group">
-                  <label>Effect/Impact</label>
-                  <input type="text" [(ngModel)]="project.effect" placeholder="Brief impact description">
+              <div class="form-group">
+                <label>Management Summary</label>
+                <app-html-editor
+                  [(content)]="getCurrentCompany().manager_short"
+                  placeholder="Brief management summary">
+                </app-html-editor>
+              </div>
+            </div>
+
+            <!-- Projects within this company -->
+            <div class="projects-section">
+              <h4>Projects at {{ getCurrentCompany().company || 'This Company' }}</h4>
+              <button type="button" class="btn-add-small" (click)="addProject(currentCompanyIndex)">+ Add Project</button>
+
+              <div *ngFor="let project of getCurrentCompany().projects; let pi = index" class="project-card">
+                <div class="project-header">
+                  <input type="text" [(ngModel)]="project.name" placeholder="Project Name" class="project-name">
+                  <div class="date-range">
+                    <input type="date" [(ngModel)]="project.start">
+                    <span>to</span>
+                    <input type="date" [(ngModel)]="project.end">
+                  </div>
+                  <button class="delete-btn" (click)="removeProject(currentCompanyIndex, pi)">🗑️</button>
                 </div>
 
-                <div class="form-group">
-                  <label>Description</label>
-                  <app-html-editor
-                    [(content)]="project.description"
-                    placeholder="Project description">
-                  </app-html-editor>
-                </div>
+                <div class="project-content">
+                  <div class="form-group">
+                    <label>Effect/Impact</label>
+                    <input type="text" [(ngModel)]="project.effect" placeholder="Brief impact description">
+                  </div>
 
-                <div class="form-group">
-                  <label>Technical Details</label>
-                  <app-html-editor
-                    [(content)]="project.tecnicalProj"
-                    placeholder="Technical implementation details">
-                  </app-html-editor>
-                </div>
+                  <div class="form-group">
+                    <label>Description</label>
+                    <app-html-editor
+                      [(content)]="project.description"
+                      placeholder="Project description">
+                    </app-html-editor>
+                  </div>
 
-                <div class="form-group">
-                  <label>Responsibilities</label>
-                  <app-html-editor
-                    [(content)]="project.responsibilities"
-                    placeholder="Your responsibilities">
-                  </app-html-editor>
-                </div>
+                  <div class="form-group">
+                    <label>Technical Details</label>
+                    <app-html-editor
+                      [(content)]="project.tecnicalProj"
+                      placeholder="Technical implementation details">
+                    </app-html-editor>
+                  </div>
 
-                <div class="form-group">
-                  <label>Achievements</label>
-                  <app-html-editor
-                    [(content)]="project.achivements"
-                    placeholder="Key achievements">
-                  </app-html-editor>
+                  <div class="form-group">
+                    <label>Responsibilities</label>
+                    <app-html-editor
+                      [(content)]="project.responsibilities"
+                      placeholder="Your responsibilities">
+                    </app-html-editor>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Achievements</label>
+                    <app-html-editor
+                      [(content)]="project.achivements"
+                      placeholder="Key achievements">
+                    </app-html-editor>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div *ngIf="resume.historicals.length === 0" class="no-companies">
+        <p>No companies added yet. Click the button above to add your first company experience.</p>
       </div>
     </section>
 

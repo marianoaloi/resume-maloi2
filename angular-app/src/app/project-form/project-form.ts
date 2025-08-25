@@ -22,6 +22,7 @@ import {
 export class ProjectForm {
   editMode: { [key: string]: boolean } = {};
   currentSection = 'personal';
+  currentCompanyIndex = 0;
 
   resume: Resume = {
     name: '',
@@ -56,6 +57,14 @@ export class ProjectForm {
 
   setSection(sectionId: string) {
     this.currentSection = sectionId;
+  }
+
+  setCurrentCompany(index: number) {
+    this.currentCompanyIndex = index;
+  }
+
+  getCurrentCompany() {
+    return this.resume.historicals[this.currentCompanyIndex];
   }
 
   isEditMode(field: string): boolean {
@@ -133,10 +142,14 @@ export class ProjectForm {
       manager_short: ''
     };
     this.resume.historicals.push(newHistorical);
+    this.currentCompanyIndex = this.resume.historicals.length - 1;
   }
 
   removeHistorical(index: number) {
     this.resume.historicals.splice(index, 1);
+    if (this.currentCompanyIndex >= this.resume.historicals.length) {
+      this.currentCompanyIndex = Math.max(0, this.resume.historicals.length - 1);
+    }
   }
 
   addProject(historicalIndex: number) {
