@@ -2,15 +2,15 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HtmlEditor } from '../html-editor/html-editor';
-import { 
-  Resume, 
-  SocialMedia, 
-  Skill, 
-  Language, 
-  Historical, 
-  Project, 
-  Education, 
-  Certificate 
+import {
+  Resume,
+  SocialMedia,
+  Skill,
+  Language,
+  Historical,
+  Project,
+  Education,
+  Certificate
 } from '../entity';
 
 @Component({
@@ -19,7 +19,16 @@ import {
   templateUrl: './project-form.html',
   styleUrl: './project-form.css'
 })
+
 export class ProjectForm {
+  
+  file:File | null = null;
+  dateToLongDate($event: any): string {
+    return new Date($event).toISOString();
+  }
+  longDateToDate(arg0: string | null): string | undefined {
+    return arg0 ? arg0.substring(0,10) : undefined
+  }
   editMode: { [key: string]: boolean } = {};
   currentSection = 'personal';
   currentCompanyIndex = 0;
@@ -44,7 +53,7 @@ export class ProjectForm {
   newLanguage: Language = { name: '', value: 0 };
   newEducation: Education = { school: '', degree: '', start: '', end: '' };
   newCertificate: Certificate = { name: '', institute: '', credential: '', issued: '', url: '' };
-  
+
   sections = [
     { id: 'personal', name: 'Personal Info', icon: '👤' },
     { id: 'social', name: 'Social Media', icon: '🌐' },
@@ -77,7 +86,7 @@ export class ProjectForm {
 
   addSocialMedia() {
     if (this.newSocialMedia.name && this.newSocialMedia.url) {
-      this.resume.socialmedias.push({...this.newSocialMedia});
+      this.resume.socialmedias.push({ ...this.newSocialMedia });
       this.newSocialMedia = { name: '', url: '' };
     }
   }
@@ -88,7 +97,7 @@ export class ProjectForm {
 
   addSkill() {
     if (this.newSkill.name && this.newSkill.value) {
-      this.resume.skills.push({...this.newSkill});
+      this.resume.skills.push({ ...this.newSkill });
       this.newSkill = { name: '', value: 0 };
     }
   }
@@ -99,7 +108,7 @@ export class ProjectForm {
 
   addLanguage() {
     if (this.newLanguage.name && this.newLanguage.value) {
-      this.resume.languages.push({...this.newLanguage});
+      this.resume.languages.push({ ...this.newLanguage });
       this.newLanguage = { name: '', value: 0 };
     }
   }
@@ -110,7 +119,7 @@ export class ProjectForm {
 
   addEducation() {
     if (this.newEducation.school && this.newEducation.degree) {
-      this.resume.educations.push({...this.newEducation});
+      this.resume.educations.push({ ...this.newEducation });
       this.newEducation = { school: '', degree: '', start: '', end: '' };
     }
   }
@@ -121,7 +130,7 @@ export class ProjectForm {
 
   addCertificate() {
     if (this.newCertificate.name && this.newCertificate.institute) {
-      this.resume.certificates.push({...this.newCertificate});
+      this.resume.certificates.push({ ...this.newCertificate });
       this.newCertificate = { name: '', institute: '', credential: '', issued: '', url: '' };
     }
   }
@@ -161,7 +170,8 @@ export class ProjectForm {
       description: '',
       tecnicalProj: '',
       responsibilities: '',
-      achivements: ''
+      achivements: '',
+      url: ''
     };
     this.resume.historicals[historicalIndex].projects.push(newProject);
   }
@@ -173,17 +183,16 @@ export class ProjectForm {
   saveResume() {
     console.log('Resume saved:', this.resume);
     const dataStr = JSON.stringify(this.resume, null, 2);
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'resume.json';
+    link.download = this.file?.name || 'resume.json';
     link.click();
   }
-
   loadResume(event: any) {
-    const file = event.target.files[0];
-    if (file) {
+    this.file = event.target.files[0];
+    if (this.file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
@@ -193,7 +202,7 @@ export class ProjectForm {
           console.error('Error loading resume:', error);
         }
       };
-      reader.readAsText(file);
+      reader.readAsText(this.file);
     }
   }
 

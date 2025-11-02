@@ -112,6 +112,7 @@
         <div *ngFor="let social of resume.socialmedias; let i = index" class="item-card">
           <div class="item-content">
             <strong>{{ social.name }}</strong>
+            :&nbsp;&nbsp;
             <a [href]="social.url" target="_blank">{{ social.url }}</a>
           </div>
           <button class="delete-btn" (click)="removeSocialMedia(i)">🗑️</button>
@@ -205,9 +206,9 @@
               <div class="form-group">
                 <label>Employment Period</label>
                 <div class="date-range">
-                  <input type="date" [(ngModel)]="getCurrentCompany().start">
+                  <input type="date" [ngModel]="longDateToDate(getCurrentCompany().start)" (ngModelChange)="getCurrentCompany().start = dateToLongDate($event)">
                   <span>to</span>
-                  <input type="date" [(ngModel)]="getCurrentCompany().end">
+                  <input type="date" [ngModel]="longDateToDate(getCurrentCompany().end)" (ngModelChange)="getCurrentCompany().end = dateToLongDate($event)">
                 </div>
               </div>
             </div>
@@ -257,9 +258,9 @@
                 <div class="project-header">
                   <input type="text" [(ngModel)]="project.name" placeholder="Project Name" class="project-name">
                   <div class="date-range">
-                    <input type="date" [(ngModel)]="project.start">
+                    <input type="date" [ngModel]="longDateToDate(project.start)" (ngModelChange)="project.start = dateToLongDate($event)">
                     <span>to</span>
-                    <input type="date" [(ngModel)]="project.end">
+                    <input type="date" [ngModel]="longDateToDate(project.end)" (ngModelChange)="project.end = dateToLongDate($event)">
                   </div>
                   <button class="delete-btn" (click)="removeProject(currentCompanyIndex, pi)">🗑️</button>
                 </div>
@@ -300,6 +301,11 @@
                       [(content)]="project.achivements"
                       placeholder="Key achievements">
                     </app-html-editor>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Project URL</label>
+                    <input type="url" [(ngModel)]="project.url" placeholder="https://...">
                   </div>
                 </div>
               </div>

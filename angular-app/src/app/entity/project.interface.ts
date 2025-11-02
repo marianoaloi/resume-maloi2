@@ -7,4 +7,6 @@ export interface Project {
   tecnicalProj: string;
   responsibilities: string;
   achivements: string;
+  url: string;
+
 }
