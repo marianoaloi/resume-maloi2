@@ -180,6 +180,14 @@ export class ProjectForm {
     this.resume.historicals[historicalIndex].projects.splice(projectIndex, 1);
   }
 
+  scrollToProject(historicalIndex: number, projectIndex: number) {
+    const elementId = `project-${historicalIndex}-${projectIndex}`;
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   saveResume() {
     console.log('Resume saved:', this.resume);
     const dataStr = JSON.stringify(this.resume, null, 2);

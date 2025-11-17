@@ -254,7 +254,19 @@
               <h4>Projects at {{ getCurrentCompany().company || 'This Company' }}</h4>
               <button type="button" class="btn-add-small" (click)="addProject(currentCompanyIndex)">+ Add Project</button>
 
-              <div *ngFor="let project of getCurrentCompany().projects; let pi = index" class="project-card">
+              <!-- Project Index Navigation -->
+              <div *ngIf="getCurrentCompany().projects.length > 0" class="project-index">
+                <div class="project-index-title">Project Index:</div>
+                <ol class="project-index-list">
+                  <li *ngFor="let project of getCurrentCompany().projects; let pi = index" class="project-index-item">
+                    <a (click)="scrollToProject(currentCompanyIndex, pi)" class="project-index-link">
+                      {{ project.name || 'Untitled Project' }}
+                    </a>
+                  </li>
+                </ol>
+              </div>
+
+              <div *ngFor="let project of getCurrentCompany().projects; let pi = index" class="project-card" [id]="'project-' + currentCompanyIndex + '-' + pi">
                 <div class="project-header">
                   <input type="text" [(ngModel)]="project.name" placeholder="Project Name" class="project-name">
                   <div class="date-range">
