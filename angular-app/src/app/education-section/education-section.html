@@ -1,0 +1,25 @@
+<section class="form-section">
+  <h2>🎓 Education</h2>
+
+  <div class="add-form">
+    <h3>Add Education</h3>
+    <div class="form-grid">
+      <input type="text" [(ngModel)]="newEducation.school" placeholder="School/University">
+      <input type="text" [(ngModel)]="newEducation.degree" placeholder="Degree/Program">
+      <input type="date" [(ngModel)]="newEducation.start" placeholder="Start Date">
+      <input type="date" [(ngModel)]="newEducation.end" placeholder="End Date">
+      <button type="button" (click)="addEducation()">Add Education</button>
+    </div>
+  </div>
+
+  <div class="items-list">
+    <div *ngFor="let education of educations; let i = index" class="item-card">
+      <div class="item-content">
+        <h4>{{ education.degree }}</h4>
+        <p><strong>{{ education.school }}</strong></p>
+        <p class="dates">{{ education.start | date:'yyyy' }} - {{ education.end | date:'yyyy' }}</p>
+      </div>
+      <button class="delete-btn" (click)="removeEducation(i)">🗑️</button>
+    </div>
+  </div>
+</section>

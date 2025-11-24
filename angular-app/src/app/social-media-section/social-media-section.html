@@ -1,0 +1,23 @@
+<section class="form-section">
+  <h2>🌐 Social Media & Links</h2>
+
+  <div class="add-form">
+    <h3>Add New Social Media</h3>
+    <div class="form-row">
+      <input type="text" [(ngModel)]="newSocialMedia.name" placeholder="Platform name (e.g., LinkedIn)">
+      <input type="url" [(ngModel)]="newSocialMedia.url" placeholder="https://...">
+      <button type="button" (click)="addSocialMedia()">Add</button>
+    </div>
+  </div>
+
+  <div class="items-list">
+    <div *ngFor="let social of socialMedias; let i = index" class="item-card">
+      <div class="item-content">
+        <strong>{{ social.name }}</strong>
+        :&nbsp;&nbsp;
+        <a [href]="social.url" target="_blank">{{ social.url }}</a>
+      </div>
+      <button class="delete-btn" (click)="removeSocialMedia(i)">🗑️</button>
+    </div>
+  </div>
+</section>

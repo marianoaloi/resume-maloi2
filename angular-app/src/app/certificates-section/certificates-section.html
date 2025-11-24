@@ -1,0 +1,28 @@
+<section class="form-section">
+  <h2>📜 Certificates & Credentials</h2>
+
+  <div class="add-form">
+    <h3>Add Certificate</h3>
+    <div class="form-grid">
+      <input type="text" [(ngModel)]="newCertificate.name" placeholder="Certificate Name">
+      <input type="text" [(ngModel)]="newCertificate.institute" placeholder="Issuing Institute">
+      <input type="text" [(ngModel)]="newCertificate.credential" placeholder="Credential ID">
+      <input type="date" [(ngModel)]="newCertificate.issued" placeholder="Issue Date">
+      <input type="url" [(ngModel)]="newCertificate.url" placeholder="Verification URL">
+      <button type="button" (click)="addCertificate()">Add Certificate</button>
+    </div>
+  </div>
+
+  <div class="items-list">
+    <div *ngFor="let certificate of certificates; let i = index" class="item-card">
+      <div class="item-content">
+        <h4>{{ certificate.name }}</h4>
+        <p><strong>{{ certificate.institute }}</strong></p>
+        <p *ngIf="certificate.credential" class="credential">ID: {{ certificate.credential }}</p>
+        <p class="dates">Issued: {{ certificate.issued | date:'mediumDate' }}</p>
+        <a *ngIf="certificate.url" [href]="certificate.url" target="_blank">🔗 Verify</a>
+      </div>
+      <button class="delete-btn" (click)="removeCertificate(i)">🗑️</button>
+    </div>
+  </div>
+</section>

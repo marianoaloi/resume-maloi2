@@ -1,0 +1,73 @@
+<section class="form-section">
+  <h2>👤 Personal Information</h2>
+
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Full Name</label>
+      <div *ngIf="!isEditMode('name')" class="display-field" (click)="toggleEdit('name')">
+        {{ personalInfo.name || 'Click to edit' }}
+      </div>
+      <input *ngIf="isEditMode('name')"
+             type="text"
+             [(ngModel)]="personalInfo.name"
+             (blur)="toggleEdit('name')"
+             placeholder="Enter your full name">
+    </div>
+
+    <div class="form-group">
+      <label>Position</label>
+      <div *ngIf="!isEditMode('position')" class="display-field" (click)="toggleEdit('position')">
+        {{ personalInfo.possition || 'Click to edit' }}
+      </div>
+      <input *ngIf="isEditMode('position')"
+             type="text"
+             [(ngModel)]="personalInfo.possition"
+             (blur)="toggleEdit('position')"
+             placeholder="e.g., Technical Leader">
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <div *ngIf="!isEditMode('email')" class="display-field" (click)="toggleEdit('email')">
+        {{ personalInfo.email || 'Click to edit' }}
+      </div>
+      <input *ngIf="isEditMode('email')"
+             type="email"
+             [(ngModel)]="personalInfo.email"
+             (blur)="toggleEdit('email')"
+             placeholder="your.email@example.com">
+    </div>
+
+    <div class="form-group">
+      <label>Telephone</label>
+      <div *ngIf="!isEditMode('telephone')" class="display-field" (click)="toggleEdit('telephone')">
+        {{ personalInfo.telephone || 'Click to edit' }}
+      </div>
+      <input *ngIf="isEditMode('telephone')"
+             type="tel"
+             [(ngModel)]="personalInfo.telephone"
+             (blur)="toggleEdit('telephone')"
+             placeholder="+1 234 567 8900">
+    </div>
+
+    <div class="form-group">
+      <label>Location</label>
+      <div *ngIf="!isEditMode('location')" class="display-field" (click)="toggleEdit('location')">
+        {{ personalInfo.location || 'Click to edit' }}
+      </div>
+      <input *ngIf="isEditMode('location')"
+             type="text"
+             [(ngModel)]="personalInfo.location"
+             (blur)="toggleEdit('location')"
+             placeholder="City, Country">
+    </div>
+  </div>
+
+  <div class="form-group full-width">
+    <label>Professional Presentation</label>
+    <app-html-editor
+      [(content)]="personalInfo.presentation"
+      placeholder="Click to edit your professional presentation">
+    </app-html-editor>
+  </div>
+</section>

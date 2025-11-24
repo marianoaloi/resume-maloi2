@@ -1,0 +1,153 @@
+<section class="form-section">
+  <h2>💼 Professional Experience</h2>
+
+  <button type="button" class="btn-add" (click)="addHistorical()">+ Add Company Experience</button>
+
+  <div *ngIf="historicals.length > 0" class="experience-tabs-container">
+    <!-- Company Tabs -->
+    <div class="company-tabs">
+      <button
+        *ngFor="let historical of historicals; let i = index"
+        class="company-tab"
+        [class.active]="currentCompanyIndex === i"
+        (click)="setCurrentCompany(i)">
+        <span class="company-name">{{ historical.company || 'Company ' + (i + 1) }}</span>
+        <button class="delete-tab-btn" (click)="removeHistorical(i); $event.stopPropagation()">×</button>
+      </button>
+    </div>
+
+    <!-- Selected Company Content -->
+    <div *ngIf="getCurrentCompany()" class="company-content">
+      <div class="experience-header">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" [(ngModel)]="getCurrentCompany().company" placeholder="Company Name" class="company-input">
+          </div>
+          <div class="form-group">
+            <label>Employment Period</label>
+            <div class="date-range">
+              <input type="date" [ngModel]="longDateToDate(getCurrentCompany().start)" (ngModelChange)="getCurrentCompany().start = dateToLongDate($event)">
+              <span>to</span>
+              <input type="date" [ngModel]="longDateToDate(getCurrentCompany().end)" (ngModelChange)="getCurrentCompany().end = dateToLongDate($event)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="experience-content">
+        <div class="form-group">
+          <label>Technical Details</label>
+          <app-html-editor
+            [(content)]="getCurrentCompany().tecnical"
+            placeholder="Detailed technical information">
+          </app-html-editor>
+        </div>
+
+        <div class="form-group">
+          <label>Management Experience</label>
+          <app-html-editor
+            [(content)]="getCurrentCompany().manager"
+            placeholder="Management and leadership experience">
+          </app-html-editor>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Technical Summary</label>
+            <app-html-editor
+              [(content)]="getCurrentCompany().tecnical_short"
+              placeholder="Brief technical summary">
+            </app-html-editor>
+          </div>
+
+          <div class="form-group">
+            <label>Management Summary</label>
+            <app-html-editor
+              [(content)]="getCurrentCompany().manager_short"
+              placeholder="Brief management summary">
+            </app-html-editor>
+          </div>
+        </div>
+
+        <!-- Projects within this company -->
+        <div class="projects-section">
+          <h4>Projects at {{ getCurrentCompany().company || 'This Company' }}</h4>
+          <button type="button" class="btn-add-small" (click)="addProject(currentCompanyIndex)">+ Add Project</button>
+
+          <!-- Project Index Navigation -->
+          <div *ngIf="getCurrentCompany().projects.length > 0" class="project-index">
+            <div class="project-index-title">Project Index:</div>
+            <ol class="project-index-list">
+              <li *ngFor="let project of getCurrentCompany().projects; let pi = index" class="project-index-item">
+                <a (click)="scrollToProject(currentCompanyIndex, pi)" class="project-index-link">
+                  {{ project.name || 'Untitled Project' }}
+                </a>
+              </li>
+            </ol>
+          </div>
+
+          <div *ngFor="let project of getCurrentCompany().projects; let pi = index" class="project-card" [id]="'project-' + currentCompanyIndex + '-' + pi">
+            <div class="project-header">
+              <input type="text" [(ngModel)]="project.name" placeholder="Project Name" class="project-name">
+              <div class="date-range">
+                <input type="date" [ngModel]="longDateToDate(project.start)" (ngModelChange)="project.start = dateToLongDate($event)">
+                <span>to</span>
+                <input type="date" [ngModel]="longDateToDate(project.end)" (ngModelChange)="project.end = dateToLongDate($event)">
+              </div>
+              <button class="delete-btn" (click)="removeProject(currentCompanyIndex, pi)">🗑️</button>
+            </div>
+
+            <div class="project-content">
+              <div class="form-group">
+                <label>Effect/Impact</label>
+                <input type="text" [(ngModel)]="project.effect" placeholder="Brief impact description">
+              </div>
+
+              <div class="form-group">
+                <label>Description</label>
+                <app-html-editor
+                  [(content)]="project.description"
+                  placeholder="Project description">
+                </app-html-editor>
+              </div>
+
+              <div class="form-group">
+                <label>Technical Details</label>
+                <app-html-editor
+                  [(content)]="project.tecnicalProj"
+                  placeholder="Technical implementation details">
+                </app-html-editor>
+              </div>
+
+              <div class="form-group">
+                <label>Responsibilities</label>
+                <app-html-editor
+                  [(content)]="project.responsibilities"
+                  placeholder="Your responsibilities">
+                </app-html-editor>
+              </div>
+
+              <div class="form-group">
+                <label>Achievements</label>
+                <app-html-editor
+                  [(content)]="project.achivements"
+                  placeholder="Key achievements">
+                </app-html-editor>
+              </div>
+
+              <div class="form-group">
+                <label>Project URL</label>
+                <input type="url" [(ngModel)]="project.url" placeholder="https://...">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="historicals.length === 0" class="no-companies">
+    <p>No companies added yet. Click the button above to add your first company experience.</p>
+  </div>
+</section>

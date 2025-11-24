@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HtmlEditor } from '../html-editor/html-editor';
+import { PersonalInfoSection } from '../personal-info-section/personal-info-section';
+import { SocialMediaSection } from '../social-media-section/social-media-section';
+import { SkillLanguageList } from '../skill-language-list/skill-language-list';
+import { EducationSection } from '../education-section/education-section';
+import { CertificatesSection } from '../certificates-section/certificates-section';
+import { ExperienceSection } from '../experience-section/experience-section';
 import {
   Resume,
   SocialMedia,
@@ -15,23 +20,22 @@ import {
 
 @Component({
   selector: 'app-project-form',
-  imports: [CommonModule, FormsModule, HtmlEditor],
+  imports: [
+    CommonModule,
+    FormsModule,
+    PersonalInfoSection,
+    SocialMediaSection,
+    SkillLanguageList,
+    EducationSection,
+    CertificatesSection,
+    ExperienceSection
+  ],
   templateUrl: './project-form.html',
   styleUrl: './project-form.css'
 })
-
 export class ProjectForm {
-  
-  file:File | null = null;
-  dateToLongDate($event: any): string {
-    return new Date($event).toISOString();
-  }
-  longDateToDate(arg0: string | null): string | undefined {
-    return arg0 ? arg0.substring(0,10) : undefined
-  }
-  editMode: { [key: string]: boolean } = {};
+  file: File | null = null;
   currentSection = 'personal';
-  currentCompanyIndex = 0;
 
   resume: Resume = {
     name: '',
@@ -48,12 +52,6 @@ export class ProjectForm {
     certificates: []
   };
 
-  newSocialMedia: SocialMedia = { name: '', url: '' };
-  newSkill: Skill = { name: '', value: 0 };
-  newLanguage: Language = { name: '', value: 0 };
-  newEducation: Education = { school: '', degree: '', start: '', end: '' };
-  newCertificate: Certificate = { name: '', institute: '', credential: '', issued: '', url: '' };
-
   sections = [
     { id: 'personal', name: 'Personal Info', icon: '👤' },
     { id: 'social', name: 'Social Media', icon: '🌐' },
@@ -68,78 +66,53 @@ export class ProjectForm {
     this.currentSection = sectionId;
   }
 
-  setCurrentCompany(index: number) {
-    this.currentCompanyIndex = index;
+  // Social Media handlers
+  onSocialMediaAdded(socialMedia: SocialMedia) {
+    this.resume.socialmedias.push(socialMedia);
   }
 
-  getCurrentCompany() {
-    return this.resume.historicals[this.currentCompanyIndex];
-  }
-
-  isEditMode(field: string): boolean {
-    return this.editMode[field] || false;
-  }
-
-  toggleEdit(field: string) {
-    this.editMode[field] = !this.editMode[field];
-  }
-
-  addSocialMedia() {
-    if (this.newSocialMedia.name && this.newSocialMedia.url) {
-      this.resume.socialmedias.push({ ...this.newSocialMedia });
-      this.newSocialMedia = { name: '', url: '' };
-    }
-  }
-
-  removeSocialMedia(index: number) {
+  onSocialMediaRemoved(index: number) {
     this.resume.socialmedias.splice(index, 1);
   }
 
-  addSkill() {
-    if (this.newSkill.name && this.newSkill.value) {
-      this.resume.skills.push({ ...this.newSkill });
-      this.newSkill = { name: '', value: 0 };
-    }
+  // Skill handlers
+  onSkillAdded(skill: Skill) {
+    this.resume.skills.push(skill);
   }
 
-  removeSkill(index: number) {
+  onSkillRemoved(index: number) {
     this.resume.skills.splice(index, 1);
   }
 
-  addLanguage() {
-    if (this.newLanguage.name && this.newLanguage.value) {
-      this.resume.languages.push({ ...this.newLanguage });
-      this.newLanguage = { name: '', value: 0 };
-    }
+  // Language handlers
+  onLanguageAdded(language: Language) {
+    this.resume.languages.push(language);
   }
 
-  removeLanguage(index: number) {
+  onLanguageRemoved(index: number) {
     this.resume.languages.splice(index, 1);
   }
 
-  addEducation() {
-    if (this.newEducation.school && this.newEducation.degree) {
-      this.resume.educations.push({ ...this.newEducation });
-      this.newEducation = { school: '', degree: '', start: '', end: '' };
-    }
+  // Education handlers
+  onEducationAdded(education: Education) {
+    this.resume.educations.push(education);
   }
 
-  removeEducation(index: number) {
+  onEducationRemoved(index: number) {
     this.resume.educations.splice(index, 1);
   }
 
-  addCertificate() {
-    if (this.newCertificate.name && this.newCertificate.institute) {
-      this.resume.certificates.push({ ...this.newCertificate });
-      this.newCertificate = { name: '', institute: '', credential: '', issued: '', url: '' };
-    }
+  // Certificate handlers
+  onCertificateAdded(certificate: Certificate) {
+    this.resume.certificates.push(certificate);
   }
 
-  removeCertificate(index: number) {
+  onCertificateRemoved(index: number) {
     this.resume.certificates.splice(index, 1);
   }
 
-  addHistorical() {
+  // Historical/Experience handlers
+  onHistoricalAdded() {
     const newHistorical: Historical = {
       company: '',
       start: '',
@@ -151,17 +124,13 @@ export class ProjectForm {
       manager_short: ''
     };
     this.resume.historicals.push(newHistorical);
-    this.currentCompanyIndex = this.resume.historicals.length - 1;
   }
 
-  removeHistorical(index: number) {
+  onHistoricalRemoved(index: number) {
     this.resume.historicals.splice(index, 1);
-    if (this.currentCompanyIndex >= this.resume.historicals.length) {
-      this.currentCompanyIndex = Math.max(0, this.resume.historicals.length - 1);
-    }
   }
 
-  addProject(historicalIndex: number) {
+  onProjectAdded(historicalIndex: number) {
     const newProject: Project = {
       name: '',
       start: '',
@@ -176,18 +145,11 @@ export class ProjectForm {
     this.resume.historicals[historicalIndex].projects.push(newProject);
   }
 
-  removeProject(historicalIndex: number, projectIndex: number) {
-    this.resume.historicals[historicalIndex].projects.splice(projectIndex, 1);
+  onProjectRemoved(event: { historicalIndex: number; projectIndex: number }) {
+    this.resume.historicals[event.historicalIndex].projects.splice(event.projectIndex, 1);
   }
 
-  scrollToProject(historicalIndex: number, projectIndex: number) {
-    const elementId = `project-${historicalIndex}-${projectIndex}`;
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
+  // File operations
   saveResume() {
     console.log('Resume saved:', this.resume);
     const dataStr = JSON.stringify(this.resume, null, 2);
@@ -198,6 +160,7 @@ export class ProjectForm {
     link.download = this.file?.name || 'resume.json';
     link.click();
   }
+
   loadResume(event: any) {
     this.file = event.target.files[0];
     if (this.file) {
@@ -212,9 +175,5 @@ export class ProjectForm {
       };
       reader.readAsText(this.file);
     }
-  }
-
-  isLongText(text: string): boolean {
-    return text.length > 100;
   }
 }

@@ -1,0 +1,26 @@
+<section class="form-section">
+  <h2>{{ icon }} {{ title }}</h2>
+
+  <div class="add-form">
+    <h3>Add New {{ title }}</h3>
+    <div class="form-row">
+      <input type="text" [(ngModel)]="newItem.name" [placeholder]="placeholder">
+      <input type="range" [(ngModel)]="newItem.value" min="0" max="100" [step]="showProgressBar ? 10 : 5">
+      <span class="range-value">{{ newItem.value }}%</span>
+      <button type="button" (click)="addItem()">Add</button>
+    </div>
+  </div>
+
+  <div class="skills-grid">
+    <div *ngFor="let item of items; let i = index" class="skill-card">
+      <div class="skill-header">
+        <strong>{{ item.name }}</strong>
+        <span class="skill-percentage">{{ item.value }}%</span>
+        <button class="delete-btn" (click)="removeItem(i)">🗑️</button>
+      </div>
+      <div *ngIf="showProgressBar" class="skill-bar">
+        <div class="skill-progress" [style.width.%]="item.value"></div>
+      </div>
+    </div>
+  </div>
+</section>
