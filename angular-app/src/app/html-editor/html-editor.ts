@@ -12,7 +12,8 @@ import {
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
 import { ListNode, ListItemNode, INSERT_UNORDERED_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND } from '@lexical/list';
 import { LinkNode } from '@lexical/link';
-import { HeadingNode, QuoteNode } from '@lexical/rich-text';
+import { HeadingNode, QuoteNode, registerRichText } from '@lexical/rich-text';
+import { registerList } from '@lexical/list';
 
 @Component({
   selector: 'app-html-editor',
@@ -92,6 +93,10 @@ export class HtmlEditor implements ControlValueAccessor, AfterViewInit, OnDestro
 
     this.editor = createEditor(this.editorConfig);
     this.editor.setRootElement(this.editorRef.nativeElement);
+
+    // Register plugins for keyboard handling (backspace, delete, enter, etc.)
+    registerRichText(this.editor);
+    registerList(this.editor);
 
     // Load existing content
     if (this.content) {
