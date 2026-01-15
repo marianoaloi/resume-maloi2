@@ -3,14 +3,31 @@
   <div *ngIf="!isEditMode" class="display-field" (click)="toggleEditMode()">
     <div [innerHTML]="content || placeholder"></div>
   </div>
-  
+
   <!-- Edit Mode -->
   <div *ngIf="isEditMode" class="edit-field">
-    <editor [apiKey]="apiKeyTyce"
-      [init]="init"
-      [(ngModel)]="content"
-      (ngModelChange)="onContentChange($event)"
-      (onBlur)="onBlur()">
-    </editor>
+    <div class="lexical-toolbar">
+      <button type="button" (click)="formatText('bold')" title="Bold">
+        <strong>B</strong>
+      </button>
+      <button type="button" (click)="formatText('italic')" title="Italic">
+        <em>I</em>
+      </button>
+      <button type="button" (click)="formatText('underline')" title="Underline">
+        <u>U</u>
+      </button>
+      <div class="toolbar-divider"></div>
+      <button type="button" (click)="formatList('ul')" title="Bullet List">
+        • List
+      </button>
+      <button type="button" (click)="formatList('ol')" title="Numbered List">
+        1. List
+      </button>
+    </div>
+
+    <div #lexicalEditor
+         class="lexical-content-editable"
+         contenteditable="true">
+    </div>
   </div>
 </div>

@@ -1,13 +1,22 @@
-import { Component, Input, Output, EventEmitter, forwardRef, ViewEncapsulation } from '@angular/core';
+import { Component, Input, Output, EventEmitter, forwardRef, ViewEncapsulation, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { EditorComponent } from '@tinymce/tinymce-angular';
-import { environment } from '../../environments/environment';
-import { RawEditorOptions } from 'tinymce';
+import {
+  createEditor,
+  LexicalEditor,
+  $getRoot,
+  BLUR_COMMAND,
+  COMMAND_PRIORITY_LOW,
+  FORMAT_TEXT_COMMAND
+} from 'lexical';
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
+import { ListNode, ListItemNode, INSERT_UNORDERED_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND } from '@lexical/list';
+import { LinkNode } from '@lexical/link';
+import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 
 @Component({
   selector: 'app-html-editor',
-  imports: [CommonModule, FormsModule, EditorComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './html-editor.html',
   styleUrl: './html-editor.css',
   encapsulation: ViewEncapsulation.None,
@@ -19,48 +28,124 @@ import { RawEditorOptions } from 'tinymce';
     }
   ]
 })
-export class HtmlEditor implements ControlValueAccessor {
+export class HtmlEditor implements ControlValueAccessor, AfterViewInit, OnDestroy {
+  @ViewChild('lexicalEditor', { static: false }) editorRef!: ElementRef<HTMLDivElement>;
   @Input() isEditMode = false;
   @Input() placeholder = 'Click to edit...';
   @Input() content = '';
   @Output() contentChange = new EventEmitter<string>();
   @Output() editModeChange = new EventEmitter<boolean>();
 
-  // TinyMCE configuration optimized for resume content - using CDN
-  init = {
-    height: 200,
-    menubar: false,
-    plugins: [
-      'lists', 'link', 'code', 'wordcount', 'autolink', 
-      'autosave', 'save', 'paste', 'searchreplace'
-    ],
-    toolbar: [
-      'undo redo | bold italic underline | forecolor backcolor',
-      'alignleft aligncenter alignright | bullist numlist | link code | removeformat'
-    ].join(' | '),
-    content_style: `
-      body { 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 14px;
-        line-height: 1.6;
-        color: #333;
-      }
-    `,
-    paste_as_text: false,
-    paste_data_images: false,
-    paste_remove_styles: false,
-    paste_remove_styles_if_webkit: false,
-    branding: false,
-    promotion: false
-  };
-
+  private editor: LexicalEditor | null = null;
+  private pendingContent: string | null = null;
   private onChange = (value: string) => {};
   private onTouched = () => {};
-  apiKeyTyce: string = environment.tinymceApiKey;
+
+  private readonly editorConfig = {
+    namespace: 'ResumeEditor',
+    theme: {
+      paragraph: 'lexical-paragraph',
+      text: {
+        bold: 'lexical-text-bold',
+        italic: 'lexical-text-italic',
+        underline: 'lexical-text-underline'
+      },
+      list: {
+        ul: 'lexical-list-ul',
+        ol: 'lexical-list-ol',
+        listitem: 'lexical-list-item'
+      }
+    },
+    nodes: [HeadingNode, ListNode, ListItemNode, LinkNode, QuoteNode],
+    onError: (error: Error) => console.error('Lexical Error:', error)
+  };
+
+  ngAfterViewInit(): void {
+    if (this.isEditMode) {
+      this.initializeLexicalEditor();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.editor) {
+      this.editor.setRootElement(null);
+      this.editor = null;
+    }
+  }
   
   toggleEditMode() {
     this.isEditMode = !this.isEditMode;
     this.editModeChange.emit(this.isEditMode);
+
+    if (this.isEditMode) {
+      setTimeout(() => this.initializeLexicalEditor(), 0);
+    } else {
+      if (this.editor) {
+        this.editor.setRootElement(null);
+        this.editor = null;
+      }
+    }
+  }
+
+  private initializeLexicalEditor(): void {
+    if (!this.editorRef || this.editor) return;
+
+    this.editor = createEditor(this.editorConfig);
+    this.editor.setRootElement(this.editorRef.nativeElement);
+
+    // Load existing content
+    if (this.content) {
+      this.loadHtmlContent(this.content);
+    } else if (this.pendingContent) {
+      this.loadHtmlContent(this.pendingContent);
+      this.pendingContent = null;
+    }
+
+    // Register update listener for form integration
+    this.editor.registerUpdateListener(({ editorState }) => {
+      editorState.read(() => {
+        const html = this.exportToHtml();
+        this.onContentChange(html);
+      });
+    });
+
+    // Register blur command
+    this.editor.registerCommand(
+      BLUR_COMMAND,
+      () => {
+        this.onBlur();
+        return false;
+      },
+      COMMAND_PRIORITY_LOW
+    );
+
+    // Auto-focus
+    setTimeout(() => this.editor?.focus(), 0);
+  }
+
+  private loadHtmlContent(htmlString: string): void {
+    if (!this.editor || !htmlString) return;
+
+    this.editor.update(() => {
+      const parser = new DOMParser();
+      const dom = parser.parseFromString(htmlString, 'text/html');
+      const nodes = $generateNodesFromDOM(this.editor!, dom);
+
+      const root = $getRoot();
+      root.clear();
+      root.append(...nodes);
+    });
+  }
+
+  private exportToHtml(): string {
+    if (!this.editor) return '';
+
+    let htmlString = '';
+    this.editor.getEditorState().read(() => {
+      htmlString = $generateHtmlFromNodes(this.editor!, null);
+    });
+
+    return htmlString;
   }
 
   onContentChange(content: string) {
@@ -73,9 +158,28 @@ export class HtmlEditor implements ControlValueAccessor {
     this.onTouched();
   }
 
+  // Toolbar actions
+  formatText(format: 'bold' | 'italic' | 'underline'): void {
+    if (!this.editor) return;
+    this.editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
+  }
+
+  formatList(listType: 'ul' | 'ol'): void {
+    if (!this.editor) return;
+    const command = listType === 'ul'
+      ? INSERT_UNORDERED_LIST_COMMAND
+      : INSERT_ORDERED_LIST_COMMAND;
+    this.editor.dispatchCommand(command, undefined);
+  }
+
   // ControlValueAccessor implementation
   writeValue(value: string): void {
     this.content = value || '';
+    if (this.editor && this.isEditMode) {
+      this.loadHtmlContent(this.content);
+    } else {
+      this.pendingContent = this.content;
+    }
   }
 
   registerOnChange(fn: (value: string) => void): void {
