@@ -77,14 +77,13 @@
 
           <!-- Project Index Navigation -->
           <div *ngIf="getCurrentCompany().projects.length > 0" class="project-index">
-            <div class="project-index-title">Project Index:</div>
-            <ol class="project-index-list">
-              <li *ngFor="let project of getCurrentCompany().projects; let pi = index" class="project-index-item">
-                <a (click)="scrollToProject(currentCompanyIndex, pi)" class="project-index-link">
-                  {{ project.name || 'Untitled Project' }}
-                </a>
-              </li>
-            </ol>
+            <button
+              *ngFor="let project of getCurrentCompany().projects; let pi = index"
+              type="button"
+              class="project-index-btn"
+              (click)="scrollToProject(currentCompanyIndex, pi)">
+              {{ pi + 1 }}. {{ project.name || 'Untitled' }}
+            </button>
           </div>
 
           <div *ngFor="let project of getCurrentCompany().projects; let pi = index" class="project-card" [id]="'project-' + currentCompanyIndex + '-' + pi">
