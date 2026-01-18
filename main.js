@@ -9,10 +9,6 @@ const contextMenu = (mainWindow) => {
   // Sets the spellchecker to check English US and French
 mainWindow.webContents.session.setSpellCheckerLanguages(['en-US', 'it-IT', 'pt-BR']);
 
-// An array of all available language codes
-const possibleLanguages = mainWindow.webContents.session.availableSpellCheckerLanguages
-console.log('Available languages:', possibleLanguages);
-
 // Listen for the context-menu event to show a custom context menu
   mainWindow.webContents.on('context-menu', (e, params) => {
     const menu = [];

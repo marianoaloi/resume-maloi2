@@ -326,20 +326,30 @@ input:focus {
   transform: scale(1.1);
 }
 
-/* Go to Top Button */
+/* URL Row with Go to Top Button */
+.url-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.url-field {
+  flex: 1;
+  margin-bottom: 0;
+}
+
 .btn-go-top {
   background: #6c757d;
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 10px 20px;
+  padding: 12px 20px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 15px;
-  display: block;
-  width: 100%;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-go-top:hover {

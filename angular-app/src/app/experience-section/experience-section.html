@@ -136,12 +136,13 @@
                 </app-html-editor>
               </div>
 
-              <div class="form-group">
-                <label>Project URL</label>
-                <input type="url" [(ngModel)]="project.url" placeholder="https://...">
+              <div class="url-row">
+                <div class="form-group url-field">
+                  <label>Project URL</label>
+                  <input type="url" [(ngModel)]="project.url" placeholder="https://...">
+                </div>
+                <button type="button" class="btn-go-top" (click)="scrollToTop()">⬆ Top</button>
               </div>
-
-              <button type="button" class="btn-go-top" (click)="scrollToTop()">⬆ Go to Top</button>
             </div>
           </div>
         </div>
