@@ -25,6 +25,17 @@
 .header-actions {
   display: flex;
   gap: 10px;
+  align-items: center;
+}
+
+.file-name {
+  color: #666;
+  font-size: 14px;
+  padding: 0 10px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Navigation */

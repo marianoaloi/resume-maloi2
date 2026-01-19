@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 const { Menu, MenuItem } = require('electron');
 
@@ -74,7 +75,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      enableRemoteModule: false
+      enableRemoteModule: false,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
@@ -107,4 +109,41 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+});
+
+// IPC Handlers for file operations
+ipcMain.handle('save-file', async (event, content, fileName) => {
+  const result = await dialog.showSaveDialog(mainWindow, {
+    title: 'Save Resume',
+    defaultPath: fileName || 'resume.json',
+    filters: [
+      { name: 'JSON Files', extensions: ['json'] },
+      { name: 'All Files', extensions: ['*'] }
+    ]
+  });
+
+  if (!result.canceled && result.filePath) {
+    fs.writeFileSync(result.filePath, content, 'utf-8');
+    return { success: true, filePath: result.filePath };
+  }
+  return { success: false };
+});
+
+ipcMain.handle('open-file', async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: 'Open Resume',
+    filters: [
+      { name: 'JSON Files', extensions: ['json'] },
+      { name: 'All Files', extensions: ['*'] }
+    ],
+    properties: ['openFile']
+  });
+
+  if (!result.canceled && result.filePaths.length > 0) {
+    const filePath = result.filePaths[0];
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const fileName = path.basename(filePath);
+    return { success: true, content, fileName, filePath };
+  }
+  return { success: false };
 });
