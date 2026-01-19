@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PersonalInfoSection } from '../personal-info-section/personal-info-section';
@@ -33,9 +33,16 @@ import {
   templateUrl: './project-form.html',
   styleUrl: './project-form.css'
 })
-export class ProjectForm {
+export class ProjectForm implements OnInit {
   fileName: string = 'resume.json';
   currentSection = 'personal';
+
+  ngOnInit() {
+    if (window.electronAPI) {
+      window.electronAPI.onSaveShortcut(() => this.saveResume());
+      window.electronAPI.onOpenShortcut(() => this.loadResume());
+    }
+  }
 
   resume: Resume = {
     name: '',
