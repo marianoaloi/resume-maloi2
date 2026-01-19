@@ -18,24 +18,30 @@
 
     <!-- Selected Company Content -->
     <div *ngIf="getCurrentCompany()" class="company-content">
-      <div class="experience-header">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Company Name</label>
-            <input type="text" [(ngModel)]="getCurrentCompany().company" placeholder="Company Name" class="company-input">
-          </div>
-          <div class="form-group">
-            <label>Employment Period</label>
-            <div class="date-range">
-              <input type="date" [ngModel]="longDateToDate(getCurrentCompany().start)" (ngModelChange)="getCurrentCompany().start = dateToLongDate($event)">
-              <span>to</span>
-              <input type="date" [ngModel]="longDateToDate(getCurrentCompany().end)" (ngModelChange)="getCurrentCompany().end = dateToLongDate($event)">
+      <!-- Company Info Toggle -->
+      <button type="button" class="btn-toggle-company" (click)="toggleCompanyInfo()">
+        {{ companyInfoExpanded ? '▼' : '▶' }} Company Info
+      </button>
+
+      <!-- Collapsible Company Information -->
+      <div class="company-info-section" *ngIf="companyInfoExpanded">
+        <div class="experience-header">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Company Name</label>
+              <input type="text" [(ngModel)]="getCurrentCompany().company" placeholder="Company Name" class="company-input">
+            </div>
+            <div class="form-group">
+              <label>Employment Period</label>
+              <div class="date-range">
+                <input type="date" [ngModel]="longDateToDate(getCurrentCompany().start)" (ngModelChange)="getCurrentCompany().start = dateToLongDate($event)">
+                <span>to</span>
+                <input type="date" [ngModel]="longDateToDate(getCurrentCompany().end)" (ngModelChange)="getCurrentCompany().end = dateToLongDate($event)">
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="experience-content">
         <div class="form-group">
           <label>Technical Details</label>
           <app-html-editor
@@ -69,7 +75,9 @@
             </app-html-editor>
           </div>
         </div>
+      </div>
 
+      <div class="experience-content">
         <!-- Projects within this company -->
         <div class="projects-section">
           <h4>Projects at {{ getCurrentCompany().company || 'This Company' }}</h4>
