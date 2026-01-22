@@ -1,0 +1,46 @@
+name: NodeJS with resume-maloi
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-node:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build
+      run: |
+        npm install --force
+        npm -C angular-app install -force
+        npm run build
+
+    - name: installer Windows
+      uses: actions/upload-artifact@v4
+      with:
+        name: Installer Windows
+        path: dist/*.exe
+        retention-days: 5        
+
+    - name: deploy release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: dist/*.exe
+        body: "make executable resume-maloi"
+        tag: ${{ github.run_number }}
+        name: Release ${{ github.run_number }}        
