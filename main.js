@@ -8,9 +8,9 @@ let mainWindow;
 
 const contextMenu = (mainWindow) => {
   // Sets the spellchecker to check English US and French
-mainWindow.webContents.session.setSpellCheckerLanguages(['en-US', 'it-IT', 'pt-BR']);
+  mainWindow.webContents.session.setSpellCheckerLanguages(['en-US', 'it-IT', 'pt-BR']);
 
-// Listen for the context-menu event to show a custom context menu
+  // Listen for the context-menu event to show a custom context menu
   mainWindow.webContents.on('context-menu', (e, params) => {
     const menu = [];
 
@@ -128,6 +128,14 @@ app.whenReady().then(() => {
         { role: 'cut' },
         { role: 'copy' },
         { role: 'paste' }
+      ]
+    },
+    {
+      label: 'DevOptions',
+      submenu: [
+        { role: 'toggleDevTools' },
+        { role: 'forceReload' },
+        { role: 'togglefullscreen' }
       ]
     }
   ];

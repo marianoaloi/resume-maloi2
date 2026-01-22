@@ -9,7 +9,7 @@
     "angular-build": "cd angular-app && ng build --base-href ./",
     "angular-serve": "cd angular-app && ng serve --port 4200",
     "build": "npm run angular-build && electron-builder",
-    "install": "npm run build && & '.\\dist\\Resume Builder Setup 1.0.0.exe'",
+    "install": "npm run build && cd .. && '.\\dist\\Resume Builder Setup 1.0.0.exe'",
     "start": "concurrently \"npm run angular-serve\" \"npm run electron-dev\""
   },
   "keywords": [],
