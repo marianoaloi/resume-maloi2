@@ -27,6 +27,7 @@ jobs:
     - name: Build
       run: |
         npm install && npm -C .\angular-app\ install
+        npm install -g @angular/cli
         npm run build
 
     - name: installer Windows
