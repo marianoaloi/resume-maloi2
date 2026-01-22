@@ -18,24 +18,30 @@
 
     <!-- Selected Company Content -->
     <div *ngIf="getCurrentCompany()" class="company-content">
-      <div class="experience-header">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Company Name</label>
-            <input type="text" [(ngModel)]="getCurrentCompany().company" placeholder="Company Name" class="company-input">
-          </div>
-          <div class="form-group">
-            <label>Employment Period</label>
-            <div class="date-range">
-              <input type="date" [ngModel]="longDateToDate(getCurrentCompany().start)" (ngModelChange)="getCurrentCompany().start = dateToLongDate($event)">
-              <span>to</span>
-              <input type="date" [ngModel]="longDateToDate(getCurrentCompany().end)" (ngModelChange)="getCurrentCompany().end = dateToLongDate($event)">
+      <!-- Company Info Toggle -->
+      <button type="button" class="btn-toggle-company" (click)="toggleCompanyInfo()">
+        {{ companyInfoExpanded ? '▼' : '▶' }} Company Info
+      </button>
+
+      <!-- Collapsible Company Information -->
+      <div class="company-info-section" *ngIf="companyInfoExpanded">
+        <div class="experience-header">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Company Name</label>
+              <input type="text" [(ngModel)]="getCurrentCompany().company" placeholder="Company Name" class="company-input">
+            </div>
+            <div class="form-group">
+              <label>Employment Period</label>
+              <div class="date-range">
+                <input type="date" [ngModel]="longDateToDate(getCurrentCompany().start)" (ngModelChange)="getCurrentCompany().start = dateToLongDate($event)">
+                <span>to</span>
+                <input type="date" [ngModel]="longDateToDate(getCurrentCompany().end)" (ngModelChange)="getCurrentCompany().end = dateToLongDate($event)">
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="experience-content">
         <div class="form-group">
           <label>Technical Details</label>
           <app-html-editor
@@ -69,7 +75,9 @@
             </app-html-editor>
           </div>
         </div>
+      </div>
 
+      <div class="experience-content">
         <!-- Projects within this company -->
         <div class="projects-section">
           <h4>Projects at {{ getCurrentCompany().company || 'This Company' }}</h4>
@@ -77,14 +85,13 @@
 
           <!-- Project Index Navigation -->
           <div *ngIf="getCurrentCompany().projects.length > 0" class="project-index">
-            <div class="project-index-title">Project Index:</div>
-            <ol class="project-index-list">
-              <li *ngFor="let project of getCurrentCompany().projects; let pi = index" class="project-index-item">
-                <a (click)="scrollToProject(currentCompanyIndex, pi)" class="project-index-link">
-                  {{ project.name || 'Untitled Project' }}
-                </a>
-              </li>
-            </ol>
+            <button
+              *ngFor="let project of getCurrentCompany().projects; let pi = index"
+              type="button"
+              class="project-index-btn"
+              (click)="scrollToProject(currentCompanyIndex, pi)">
+              {{ pi + 1 }}. {{ project.name || 'Untitled' }}
+            </button>
           </div>
 
           <div *ngFor="let project of getCurrentCompany().projects; let pi = index" class="project-card" [id]="'project-' + currentCompanyIndex + '-' + pi">
@@ -136,9 +143,12 @@
                 </app-html-editor>
               </div>
 
-              <div class="form-group">
-                <label>Project URL</label>
-                <input type="url" [(ngModel)]="project.url" placeholder="https://...">
+              <div class="url-row">
+                <div class="form-group url-field">
+                  <label>Project URL</label>
+                  <input type="url" [(ngModel)]="project.url" placeholder="https://...">
+                </div>
+                <button type="button" class="btn-go-top" (click)="scrollToTop()">⬆ Top</button>
               </div>
             </div>
           </div>

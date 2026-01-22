@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PersonalInfoSection } from '../personal-info-section/personal-info-section';
@@ -33,9 +33,16 @@ import {
   templateUrl: './project-form.html',
   styleUrl: './project-form.css'
 })
-export class ProjectForm {
-  file: File | null = null;
+export class ProjectForm implements OnInit {
+  fileName: string = 'resume.json';
   currentSection = 'personal';
+
+  ngOnInit() {
+    if (window.electronAPI) {
+      window.electronAPI.onSaveShortcut(() => this.saveResume());
+      window.electronAPI.onOpenShortcut(() => this.loadResume());
+    }
+  }
 
   resume: Resume = {
     name: '',
@@ -150,30 +157,38 @@ export class ProjectForm {
   }
 
   // File operations
-  saveResume() {
-    console.log('Resume saved:', this.resume);
-    const dataStr = JSON.stringify(this.resume, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = this.file?.name || 'resume.json';
-    link.click();
+  async saveResume() {
+    const content = JSON.stringify(this.resume, null, 2);
+
+    if (window.electronAPI) {
+      const result = await window.electronAPI.saveFile(content, this.fileName);
+      if (result.success && result.filePath) {
+        this.fileName = result.filePath.split(/[/\\]/).pop() || 'resume.json';
+        console.log('Resume saved to:', result.filePath);
+      }
+    } else {
+      // Fallback for browser
+      const dataBlob = new Blob([content], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = this.fileName;
+      link.click();
+    }
   }
 
-  loadResume(event: any) {
-    this.file = event.target.files[0];
-    if (this.file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
+  async loadResume() {
+    if (window.electronAPI) {
+      const result = await window.electronAPI.openFile();
+      if (result.success && result.content) {
         try {
-          const result = e.target?.result as string;
-          this.resume = JSON.parse(result);
+          this.resume = JSON.parse(result.content);
+          this.fileName = result.fileName || 'resume.json';
+          console.log('Resume loaded:', this.fileName);
         } catch (error) {
-          console.error('Error loading resume:', error);
+          console.error('Error parsing resume:', error);
         }
-      };
-      reader.readAsText(this.file);
+      }
     }
   }
 }

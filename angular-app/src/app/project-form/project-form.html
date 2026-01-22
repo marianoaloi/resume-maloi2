@@ -2,9 +2,9 @@
   <header class="app-header">
     <h1>📄 Resume Builder</h1>
     <div class="header-actions">
-      <input type="file" #fileInput (change)="loadResume($event)" accept=".json" style="display: none;">
-      <button type="button" class="btn-secondary" (click)="fileInput.click()">📁 Load Resume</button>
-      <button type="button" class="btn-primary" (click)="saveResume()">💾 Save Resume</button>
+      <span class="file-name">{{ fileName }}</span>
+      <button type="button" class="btn-secondary" (click)="loadResume()">📁 Load</button>
+      <button type="button" class="btn-primary" (click)="saveResume()">💾 Save</button>
     </div>
   </header>
 

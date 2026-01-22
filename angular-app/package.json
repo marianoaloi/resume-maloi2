@@ -1,6 +1,6 @@
 {
   "name": "angular-app",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -28,9 +28,13 @@
     "@angular/forms": "^20.2.0",
     "@angular/platform-browser": "^20.2.0",
     "@angular/router": "^20.2.0",
-    "@tinymce/tinymce-angular": "^9.1.0",
+    "@lexical/html": "^0.39.0",
+    "@lexical/link": "^0.39.0",
+    "@lexical/list": "^0.39.0",
+    "@lexical/rich-text": "^0.39.0",
+    "@lexical/utils": "^0.39.0",
+    "lexical": "^0.39.0",
     "rxjs": "~7.8.0",
-    "tinymce": "^8.0.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

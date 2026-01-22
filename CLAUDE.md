@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an **Electron + Angular** desktop application for building professional resumes. The app allows users to create, edit, and export comprehensive CVs with rich formatting support via TinyMCE.
+This is an **Electron + Angular** desktop application for building professional resumes. The app allows users to create, edit, and export comprehensive CVs with rich formatting support via Meta's Lexical editor.
 
 **Key Architecture**: Dual-layer application with Electron as the desktop wrapper and Angular 20 (standalone components) as the frontend framework.
 
@@ -66,7 +66,7 @@ cd angular-app && ng test --code-coverage
 
 **Core Components**:
 - `app/project-form/`: Main resume builder form (primary UI component)
-- `app/html-editor/`: TinyMCE rich text editor wrapper component
+- `app/html-editor/`: Lexical rich text editor component (vanilla JS integration)
 - `app/entity/`: TypeScript interfaces for data model (see Data Model below)
 
 **Routing**: Uses Angular Router with standalone components (`app.routes.ts`)
@@ -96,22 +96,33 @@ Historical {
 
 **Important**: The app organizes work experience by company, with each company containing multiple projects. This nested structure is central to the resume builder's functionality.
 
-### TinyMCE Integration
+### Lexical Editor Integration
 
-**API Key Setup Required**: The app uses TinyMCE Cloud requiring an API key.
+**Framework**: Meta's Lexical editor (vanilla JS integration with Angular)
 
-**Environment Files**:
-- `angular-app/src/environments/environment.ts` (development)
-- `angular-app/src/environments/environment.prod.ts` (production - currently missing from repo structure)
+**Location**: `angular-app/src/app/html-editor/`
 
-**Setup Process**:
-1. Get free API key from https://www.tiny.cloud/get-tiny/
-2. Run `node setup-api-key.js YOUR_API_KEY` OR
-3. Manually replace `#$API_KEY_$#` placeholder in environment files
+**Dependencies**:
+- `lexical` - Core editor engine
+- `@lexical/html` - HTML serialization/deserialization
+- `@lexical/rich-text` - Text formatting (bold, italic, underline)
+- `@lexical/list` - List support (bullet, numbered)
+- `@lexical/link` - Hyperlink support
+- `@lexical/utils` - Utility functions
 
-**Security**: Real API keys should be in `.env.local` and git-ignored. The placeholder `#$API_KEY_$#` is safe to commit.
+**Features**:
+- Basic text formatting (bold, italic, underline)
+- Lists (bulleted and numbered)
+- HTML content persistence (backward compatible with previous data)
+- Click-to-edit interface with display/edit modes
+- Angular forms integration via ControlValueAccessor
+- No external API key required (open source)
 
-See [TINYMCE-SETUP.md](TINYMCE-SETUP.md) for detailed instructions.
+**Usage**:
+- `personal-info-section.ts` - Professional presentation field
+- `experience-section.ts` - Company and project description fields (8 editors)
+
+**Total**: 9 rich text editor instances across the application
 
 ## Build & Distribution
 

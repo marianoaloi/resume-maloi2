@@ -9,6 +9,7 @@
     "angular-build": "cd angular-app && ng build --base-href ./",
     "angular-serve": "cd angular-app && ng serve --port 4200",
     "build": "npm run angular-build && electron-builder",
+    "install": "npm run build && '..\\dist\\Resume Builder Setup 1.0.0.exe'",
     "start": "concurrently \"npm run angular-serve\" \"npm run electron-dev\""
   },
   "keywords": [],
@@ -19,7 +20,10 @@
     "concurrently": "^9.2.0",
     "cross-env": "^10.0.0",
     "electron": "^37.3.1",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "@angular/build": "^20.2.0",
+    "@angular/cli": "^20.2.0",
+    "@angular/compiler-cli": "^20.2.0"
   },
   "dependencies": {
   },
@@ -31,6 +35,9 @@
     },
     "files": [
       "main.js",
+      "preload.js",
+      "contextMenu.js",
+      "createMenu.js",
       "img/**/*",
       "angular-app/dist/**/*"
     ],

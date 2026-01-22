@@ -18,6 +18,11 @@ export class ExperienceSection {
   @Output() projectRemoved = new EventEmitter<{ historicalIndex: number; projectIndex: number }>();
 
   currentCompanyIndex = 0;
+  companyInfoExpanded = false;
+
+  toggleCompanyInfo() {
+    this.companyInfoExpanded = !this.companyInfoExpanded;
+  }
 
   dateToLongDate($event: any): string {
     return new Date($event).toISOString();
@@ -61,5 +66,9 @@ export class ExperienceSection {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
