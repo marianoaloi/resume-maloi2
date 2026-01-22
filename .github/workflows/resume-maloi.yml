@@ -28,7 +28,10 @@ jobs:
       run: |
         npm install && npm -C .\angular-app\ install
         npm install -g @angular/cli
-        npm run build
+        npm run build -- --publish always
+      env:
+        # Use the default token provided by GitHub Actions
+        GH_TOKEN: ${{ secrets.MALOI_TOKEN }}
 
     - name: installer Windows
       uses: actions/upload-artifact@v4
