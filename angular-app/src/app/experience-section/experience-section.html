@@ -17,7 +17,7 @@
     <div *ngIf="getCurrentCompany()" class="company-content">
 
 
-      <div>
+      <div class="project-index-row">
         <!-- Project Index Navigation -->
         <div *ngIf="getCurrentCompany().projects.length > 0" class="project-index">
           <button *ngFor="let project of getCurrentCompany().projects; let pi = index" type="button"
@@ -25,8 +25,7 @@
             {{ pi + 1 }}. {{ project.name || 'Untitled' }}
           </button>
         </div>
-        <button type="button" class="btn-add-small" (click)="addProject(currentCompanyIndex)">+ Add Project</button>
-
+        <button type="button" class="btn-add-project" title="Add a new project" (click)="addProject(currentCompanyIndex)">+</button>
       </div>
 
       <!-- Company Info Toggle -->
