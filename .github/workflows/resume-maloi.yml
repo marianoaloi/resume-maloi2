@@ -39,6 +39,9 @@ jobs:
         name: Installer Windows
         path: dist/*.exe
         retention-days: 5        
+      env:
+        # Use the default token provided by GitHub Actions
+        GH_TOKEN: ${{ secrets.MALOI_TOKEN }}
 
     - name: deploy release
       uses: ncipollo/release-action@v1
@@ -47,3 +50,6 @@ jobs:
         body: "make executable resume-maloi"
         tag: ${{ github.run_number }}
         name: Release ${{ github.run_number }}        
+      env:
+        # Use the default token provided by GitHub Actions
+        GH_TOKEN: ${{ secrets.MALOI_TOKEN }}
