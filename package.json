@@ -1,6 +1,6 @@
 {
   "name": "resume-maloi2",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Curriculum vitae application to create an complex object by this project.",
   "main": "main.js",
   "scripts": {
