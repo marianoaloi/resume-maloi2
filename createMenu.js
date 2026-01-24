@@ -1,7 +1,7 @@
 const { Menu, MenuItem } = require('electron');
 
-const createMenu = () => {
-    
+const createMenu = (mainWindow) => {
+
   // Create application menu with shortcuts
   const template = [
     {
@@ -16,6 +16,11 @@ const createMenu = () => {
           label: 'Save',
           accelerator: 'CmdOrCtrl+S',
           click: () => mainWindow.webContents.send('save-shortcut')
+        },
+        {
+          label: 'Save as',
+          accelerator: 'CmdOrCtrl+Shift+S',
+          click: () => mainWindow.webContents.send('save-as-shortcut')
         },
         { type: 'separator' },
         { role: 'quit' }
