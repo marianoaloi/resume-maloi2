@@ -11,7 +11,8 @@ import {
 } from 'lexical';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
 import { ListNode, ListItemNode, INSERT_UNORDERED_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND } from '@lexical/list';
-import { LinkNode } from '@lexical/link';
+import { LinkNode, TOGGLE_LINK_COMMAND, $isLinkNode, toggleLink } from '@lexical/link';
+import { $getSelection, $isRangeSelection } from 'lexical';
 import { HeadingNode, QuoteNode, registerRichText } from '@lexical/rich-text';
 import { registerList } from '@lexical/list';
 
@@ -39,6 +40,8 @@ export class HtmlEditor implements ControlValueAccessor, AfterViewInit, OnDestro
 
   private editor: LexicalEditor | null = null;
   private pendingContent: string | null = null;
+  showLinkInput = false;
+  linkUrl = '';
   private onChange = (value: string) => {};
   private onTouched = () => {};
 
@@ -97,6 +100,16 @@ export class HtmlEditor implements ControlValueAccessor, AfterViewInit, OnDestro
     // Register plugins for keyboard handling (backspace, delete, enter, etc.)
     registerRichText(this.editor);
     registerList(this.editor);
+
+    // Register link command handler
+    this.editor.registerCommand(
+      TOGGLE_LINK_COMMAND,
+      (payload: string | null) => {
+        toggleLink(payload);
+        return true;
+      },
+      COMMAND_PRIORITY_LOW
+    );
 
     // Load existing content
     if (this.content) {
@@ -175,6 +188,39 @@ export class HtmlEditor implements ControlValueAccessor, AfterViewInit, OnDestro
       ? INSERT_UNORDERED_LIST_COMMAND
       : INSERT_ORDERED_LIST_COMMAND;
     this.editor.dispatchCommand(command, undefined);
+  }
+
+  toggleLink(): void {
+    if (!this.editor) return;
+
+    this.editor.getEditorState().read(() => {
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
+
+      const nodes = selection.getNodes();
+      const isLink = nodes.some(node => {
+        const parent = node.getParent();
+        return $isLinkNode(parent) || $isLinkNode(node);
+      });
+
+      if (isLink) {
+        this.editor!.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+      } else {
+        this.showLinkInput = true;
+        this.linkUrl = '';
+      }
+    });
+  }
+
+  applyLink(): void {
+    if (!this.editor || !this.linkUrl) return;
+    this.editor.dispatchCommand(TOGGLE_LINK_COMMAND, this.linkUrl);
+    this.closeLinkInput();
+  }
+
+  closeLinkInput(): void {
+    this.showLinkInput = false;
+    this.linkUrl = '';
   }
 
   // ControlValueAccessor implementation

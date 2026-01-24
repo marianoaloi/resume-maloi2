@@ -110,3 +110,56 @@
 .lexical-paragraph:last-child {
   margin-bottom: 0;
 }
+
+/* Lexical Links */
+.lexical-content-editable a {
+  color: #1976d2;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.lexical-content-editable a:hover {
+  color: #1565c0;
+}
+
+/* Link Input */
+.link-input-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 4px;
+}
+
+.link-input {
+  padding: 4px 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 13px;
+  width: 180px;
+}
+
+.link-input:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.link-apply-btn,
+.link-cancel-btn {
+  padding: 4px 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.link-apply-btn {
+  background: #4caf50;
+  color: white;
+  border-color: #4caf50;
+}
+
+.link-cancel-btn {
+  background: #f44336;
+  color: white;
+  border-color: #f44336;
+}
