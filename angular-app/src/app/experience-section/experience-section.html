@@ -1,7 +1,7 @@
 <section class="form-section">
   <h2>💼 Professional Experience</h2>
 
-  <button type="button" class="btn-add" (click)="addHistorical()">+ Add Company Experience</button>
+  <button *ngIf="historicals.length === 0" type="button" class="btn-add" (click)="addHistorical()">+ Add Company Experience</button>
 
   <div *ngIf="historicals.length > 0" class="experience-tabs-container">
     <!-- Company Tabs -->
@@ -11,6 +11,7 @@
         <span class="company-name">{{ historical.company || 'Company ' + (i + 1) }}</span>
         <button class="delete-tab-btn" (click)="removeHistorical(i); $event.stopPropagation()">×</button>
       </button>
+      <button type="button" class="btn-add-company" (click)="addHistorical()">+</button>
     </div>
 
     <!-- Selected Company Content -->

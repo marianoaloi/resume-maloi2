@@ -127,6 +127,28 @@
   transform: scale(1.1);
 }
 
+.btn-add-company {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-add-company:hover {
+  background: #1e7e34;
+  transform: scale(1.1);
+}
+
 /* Company Content */
 .company-content {
   background: white;
@@ -292,6 +314,9 @@ input:focus {
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .project-index-btn:hover {
