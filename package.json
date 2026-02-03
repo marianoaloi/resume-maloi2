@@ -6,10 +6,12 @@
   "scripts": {
     "electron": "electron .",
     "electron-dev": "cross-env NODE_ENV=development electron .",
-    "angular-build": "cd angular-app && npm version patch && ng build --base-href ./",
+    "angular-build": "cd angular-app && ng build --base-href ./",
+    "angular-build2": "cd angular-app && npm version patch && ng build --base-href ./",
     "angular-serve": "cd angular-app && ng serve --port 4200",
-    "build": "npm version patch && npm run angular-build && electron-builder",
-    "install_win": "npm run build && '..\\dist\\Resume Builder Setup 1.0.0.exe'",
+    "build": "npm version patch && electron-builder",
+    "build2": "npm run angular-build2 && npm run angular-build && electron-builder",
+    "install_win": "npm run2 build && '..\\dist\\Resume Builder Setup 1.0.0.exe'",
     "start": "concurrently \"npm run angular-serve\" \"npm run electron-dev\""
   },
   "keywords": [],
