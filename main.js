@@ -73,6 +73,15 @@ ipcMain.handle('save-file', async (event, content, fileName) => {
   return { success: false };
 });
 
+ipcMain.handle('save-file-direct', async (event, content, filePath) => {
+  try {
+    fs.writeFileSync(filePath, content, 'utf-8');
+    return { success: true, filePath: filePath };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
 ipcMain.handle('open-file', async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
     title: 'Open Resume',

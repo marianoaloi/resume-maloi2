@@ -23,6 +23,20 @@
       <button type="button" (click)="formatList('ol')" title="Numbered List">
         1. List
       </button>
+      <div class="toolbar-divider"></div>
+      <button type="button" (click)="toggleLink()" title="Insert Link">
+        🔗 Link
+      </button>
+      <div *ngIf="showLinkInput" class="link-input-container">
+        <input type="text"
+               [(ngModel)]="linkUrl"
+               placeholder="Enter URL..."
+               (keyup.enter)="applyLink()"
+               (keyup.escape)="closeLinkInput()"
+               class="link-input" />
+        <button type="button" (click)="applyLink()" class="link-apply-btn">✓</button>
+        <button type="button" (click)="closeLinkInput()" class="link-cancel-btn">✕</button>
+      </div>
     </div>
 
     <div #lexicalEditor
