@@ -42,6 +42,7 @@ export class HtmlEditor implements ControlValueAccessor, AfterViewInit, OnDestro
   private pendingContent: string | null = null;
   showLinkInput = false;
   linkUrl = '';
+  useFallbackTextarea = false;
   private onChange = (value: string) => {};
   private onTouched = () => {};
 
@@ -91,54 +92,72 @@ export class HtmlEditor implements ControlValueAccessor, AfterViewInit, OnDestro
     }
   }
 
+  switchToTextarea() {
+    if (this.editor) {
+      this.editor.setRootElement(null);
+      this.editor = null;
+    }
+    this.useFallbackTextarea = true;
+  }
+
+  onFallbackInput(value: string) {
+    this.onContentChange(value);
+  }
+
   private initializeLexicalEditor(): void {
     if (!this.editorRef || this.editor) return;
 
-    this.editor = createEditor(this.editorConfig);
-    this.editor.setRootElement(this.editorRef.nativeElement);
+    try {
+      this.editor = createEditor(this.editorConfig);
+      this.editor.setRootElement(this.editorRef.nativeElement);
 
-    // Register plugins for keyboard handling (backspace, delete, enter, etc.)
-    registerRichText(this.editor);
-    registerList(this.editor);
+      // Register plugins for keyboard handling (backspace, delete, enter, etc.)
+      registerRichText(this.editor);
+      registerList(this.editor);
 
-    // Register link command handler
-    this.editor.registerCommand(
-      TOGGLE_LINK_COMMAND,
-      (payload: string | null) => {
-        toggleLink(payload);
-        return true;
-      },
-      COMMAND_PRIORITY_LOW
-    );
+      // Register link command handler
+      this.editor.registerCommand(
+        TOGGLE_LINK_COMMAND,
+        (payload: string | null) => {
+          toggleLink(payload);
+          return true;
+        },
+        COMMAND_PRIORITY_LOW
+      );
 
-    // Load existing content
-    if (this.content) {
-      this.loadHtmlContent(this.content);
-    } else if (this.pendingContent) {
-      this.loadHtmlContent(this.pendingContent);
-      this.pendingContent = null;
-    }
+      // Load existing content
+      if (this.content) {
+        this.loadHtmlContent(this.content);
+      } else if (this.pendingContent) {
+        this.loadHtmlContent(this.pendingContent);
+        this.pendingContent = null;
+      }
 
-    // Register update listener for form integration
-    this.editor.registerUpdateListener(({ editorState }) => {
-      editorState.read(() => {
-        const html = this.exportToHtml();
-        this.onContentChange(html);
+      // Register update listener for form integration
+      this.editor.registerUpdateListener(({ editorState }) => {
+        editorState.read(() => {
+          const html = this.exportToHtml();
+          this.onContentChange(html);
+        });
       });
-    });
 
-    // Register blur command
-    this.editor.registerCommand(
-      BLUR_COMMAND,
-      () => {
-        this.onBlur();
-        return false;
-      },
-      COMMAND_PRIORITY_LOW
-    );
+      // Register blur command
+      this.editor.registerCommand(
+        BLUR_COMMAND,
+        () => {
+          this.onBlur();
+          return false;
+        },
+        COMMAND_PRIORITY_LOW
+      );
 
-    // Auto-focus
-    setTimeout(() => this.editor?.focus(), 0);
+      // Auto-focus
+      setTimeout(() => this.editor?.focus(), 0);
+    } catch (error) {
+      console.error('Failed to initialize Lexical editor, falling back to textarea:', error);
+      this.editor = null;
+      this.useFallbackTextarea = true;
+    }
   }
 
   private loadHtmlContent(htmlString: string): void {

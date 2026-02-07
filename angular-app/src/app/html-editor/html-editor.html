@@ -43,9 +43,25 @@
       </div>
     </div>
 
-    <div #lexicalEditor
-         class="lexical-content-editable"
-         contenteditable="true">
+    <!-- Lexical editor -->
+    <div *ngIf="!useFallbackTextarea">
+      <div #lexicalEditor
+           class="lexical-content-editable"
+           contenteditable="true">
+      </div>
+      <div class="fallback-link">
+        <button type="button" (click)="switchToTextarea()" class="btn-switch-textarea" title="Edit as plain text">
+          Edit as text
+        </button>
+      </div>
+    </div>
+
+    <!-- Fallback textarea -->
+    <div *ngIf="useFallbackTextarea" class="fallback-textarea-wrapper">
+      <textarea class="fallback-textarea"
+                [value]="content"
+                (input)="onFallbackInput($any($event.target).value)"
+                rows="8"></textarea>
     </div>
   </div>
 </div>

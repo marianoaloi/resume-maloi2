@@ -31,7 +31,14 @@
           <!-- Field editor level -->
           <div *ngIf="isProjectExpanded(ci, pi)" class="tree-children field-content">
             <div class="field-editor-wrapper">
-              <app-html-editor
+              <!-- Effect uses simple textarea -->
+              <textarea *ngIf="selectedField === 'effect'"
+                        class="effect-textarea"
+                        [(ngModel)]="project.effect"
+                        [placeholder]="getPlaceholder()"
+                        rows="4"></textarea>
+              <!-- Other fields use HTML Editor -->
+              <app-html-editor *ngIf="selectedField !== 'effect'"
                 [content]="getFieldValue(project)"
                 (contentChange)="setFieldValue(project, $event)"
                 [placeholder]="getPlaceholder()">
