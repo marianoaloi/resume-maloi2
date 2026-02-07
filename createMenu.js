@@ -27,6 +27,21 @@ const createMenu = (mainWindow) => {
       ]
     },
     {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Resume Form',
+          accelerator: 'CmdOrCtrl+1',
+          click: () => mainWindow.webContents.send('navigate', '/')
+        },
+        {
+          label: 'Project Tree View',
+          accelerator: 'CmdOrCtrl+2',
+          click: () => mainWindow.webContents.send('navigate', '/tree-view')
+        }
+      ]
+    },
+    {
       label: 'Edit',
       submenu: [
         { role: 'undo' },

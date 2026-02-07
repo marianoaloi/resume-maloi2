@@ -1,0 +1,55 @@
+<div class="tree-view-container">
+  <header class="tree-view-header">
+    <h2>Project Field Overview</h2>
+    <div class="field-selector">
+      <label for="fieldSelect">Field to view:</label>
+      <select id="fieldSelect" [(ngModel)]="selectedField">
+        <option *ngFor="let opt of fieldOptions" [value]="opt.value">
+          {{ opt.label }}
+        </option>
+      </select>
+    </div>
+  </header>
+
+  <div class="tree" *ngIf="historicals.length > 0; else noData">
+    <!-- Company level -->
+    <div *ngFor="let historical of historicals; let ci = index" class="tree-node company-node">
+      <div class="tree-node-header company-header" (click)="toggleCompany(ci)">
+        <span class="toggle-icon">{{ isCompanyExpanded(ci) ? '&#9660;' : '&#9654;' }}</span>
+        <span class="node-label company-label">{{ historical.company || 'Company ' + (ci + 1) }}</span>
+        <span class="project-count">({{ historical.projects.length }} projects)</span>
+      </div>
+
+      <!-- Project level -->
+      <div *ngIf="isCompanyExpanded(ci)" class="tree-children">
+        <div *ngFor="let project of historical.projects; let pi = index" class="tree-node project-node">
+          <div class="tree-node-header project-header" (click)="toggleProject(ci, pi)">
+            <span class="toggle-icon">{{ isProjectExpanded(ci, pi) ? '&#9660;' : '&#9654;' }}</span>
+            <span class="node-label">{{ project.name || 'Project ' + (pi + 1) }}</span>
+          </div>
+
+          <!-- Field editor level -->
+          <div *ngIf="isProjectExpanded(ci, pi)" class="tree-children field-content">
+            <div class="field-editor-wrapper">
+              <app-html-editor
+                [content]="getFieldValue(project)"
+                (contentChange)="setFieldValue(project, $event)"
+                [placeholder]="getPlaceholder()">
+              </app-html-editor>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="historical.projects.length === 0" class="no-projects">
+          No projects in this company.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <div class="no-data">
+      <p>No company experience added yet. Go to the Resume Form (Ctrl+1) to add companies and projects.</p>
+    </div>
+  </ng-template>
+</div>

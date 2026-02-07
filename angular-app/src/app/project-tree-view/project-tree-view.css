@@ -1,0 +1,150 @@
+.tree-view-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 30px;
+}
+
+.tree-view-header {
+  background: white;
+  border-radius: 15px;
+  padding: 20px 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tree-view-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.field-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.field-selector label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.field-selector select {
+  padding: 10px 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+  min-width: 200px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.field-selector select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.tree {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.tree-node {
+  margin-bottom: 4px;
+}
+
+.tree-node-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.tree-node-header:hover {
+  background: #f8f9fa;
+}
+
+.company-header {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  background: #f0f2ff;
+  border: 1px solid #dee2e6;
+}
+
+.company-header:hover {
+  background: #e4e8ff;
+}
+
+.project-header {
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.toggle-icon {
+  width: 16px;
+  font-size: 12px;
+  color: #6c757d;
+  flex-shrink: 0;
+}
+
+.node-label {
+  flex: 1;
+}
+
+.company-label {
+  color: #667eea;
+}
+
+.project-count {
+  font-size: 12px;
+  color: #6c757d;
+  font-weight: 400;
+}
+
+.tree-children {
+  padding-left: 28px;
+  border-left: 2px solid #e9ecef;
+  margin-left: 10px;
+}
+
+.field-content {
+  padding: 12px 0 12px 12px;
+}
+
+.field-editor-wrapper {
+  background: #fafbfc;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.no-projects,
+.no-data {
+  color: #6c757d;
+  font-style: italic;
+  padding: 15px;
+  text-align: center;
+}
+
+.no-data {
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}

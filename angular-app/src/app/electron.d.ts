@@ -5,6 +5,7 @@ interface ElectronAPI {
   onSaveShortcut: (callback: () => void) => void;
   onSaveAsShortcut: (callback: () => void) => void;
   onOpenShortcut: (callback: () => void) => void;
+  onNavigate: (callback: (route: string) => void) => void;
 }
 
 interface Window {

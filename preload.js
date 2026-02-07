@@ -6,5 +6,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   openFile: () => ipcRenderer.invoke('open-file'),
   onSaveShortcut: (callback) => ipcRenderer.on('save-shortcut', callback),
   onSaveAsShortcut: (callback) => ipcRenderer.on('save-as-shortcut', callback),
-  onOpenShortcut: (callback) => ipcRenderer.on('open-shortcut', callback)
+  onOpenShortcut: (callback) => ipcRenderer.on('open-shortcut', callback),
+  onNavigate: (callback) => ipcRenderer.on('navigate', (_event, route) => callback(route))
 });

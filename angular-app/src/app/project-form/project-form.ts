@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PersonalInfoSection } from '../personal-info-section/personal-info-section';
@@ -7,8 +7,8 @@ import { SkillLanguageList } from '../skill-language-list/skill-language-list';
 import { EducationSection } from '../education-section/education-section';
 import { CertificatesSection } from '../certificates-section/certificates-section';
 import { ExperienceSection } from '../experience-section/experience-section';
+import { ResumeService } from '../services/resume.service';
 import {
-  Resume,
   SocialMedia,
   Skill,
   Language,
@@ -33,33 +33,22 @@ import {
   templateUrl: './project-form.html',
   styleUrl: './project-form.css'
 })
-export class ProjectForm implements OnInit {
-  fileName: string = 'resume.json';
-  filePath: string | null = null;
+export class ProjectForm {
   currentSection = 'personal';
 
-  ngOnInit() {
-    if (window.electronAPI) {
-      window.electronAPI.onSaveShortcut(() => this.saveResume());
-      window.electronAPI.onSaveAsShortcut(() => this.saveResumeAs());
-      window.electronAPI.onOpenShortcut(() => this.loadResume());
-    }
+  constructor(private resumeService: ResumeService) {}
+
+  get resume() {
+    return this.resumeService.resume;
   }
 
-  resume: Resume = {
-    name: '',
-    telephone: '',
-    location: '',
-    email: '',
-    possition: '',
-    presentation: '',
-    socialmedias: [],
-    skills: [],
-    languages: [],
-    historicals: [],
-    educations: [],
-    certificates: []
-  };
+  get fileName() {
+    return this.resumeService.fileName;
+  }
+
+  get filePath() {
+    return this.resumeService.filePath;
+  }
 
   sections = [
     { id: 'personal', name: 'Personal Info', icon: '👤' },
@@ -158,68 +147,16 @@ export class ProjectForm implements OnInit {
     this.resume.historicals[event.historicalIndex].projects.splice(event.projectIndex, 1);
   }
 
-  // File operations
+  // File operations - delegate to service
   async saveResume() {
-    const content = JSON.stringify(this.resume, null, 2);
-
-    if (window.electronAPI) {
-      // If we have a file path, save directly without dialog
-      if (this.filePath) {
-        const result = await window.electronAPI.saveFileDirect(content, this.filePath);
-        if (result.success) {
-          console.log('Resume saved to:', this.filePath);
-        } else {
-          console.error('Error saving resume:', result.error);
-        }
-      } else {
-        // No file path, use Save As
-        await this.saveResumeAs();
-      }
-    } else {
-      // Fallback for browser
-      const dataBlob = new Blob([content], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = this.fileName;
-      link.click();
-    }
+    await this.resumeService.saveResume();
   }
 
   async saveResumeAs() {
-    const content = JSON.stringify(this.resume, null, 2);
-
-    if (window.electronAPI) {
-      const result = await window.electronAPI.saveFile(content, this.fileName);
-      if (result.success && result.filePath) {
-        this.filePath = result.filePath;
-        this.fileName = result.filePath.split(/[/\\]/).pop() || 'resume.json';
-        console.log('Resume saved to:', result.filePath);
-      }
-    } else {
-      // Fallback for browser
-      const dataBlob = new Blob([content], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = this.fileName;
-      link.click();
-    }
+    await this.resumeService.saveResumeAs();
   }
 
   async loadResume() {
-    if (window.electronAPI) {
-      const result = await window.electronAPI.openFile();
-      if (result.success && result.content) {
-        try {
-          this.resume = JSON.parse(result.content);
-          this.fileName = result.fileName || 'resume.json';
-          this.filePath = result.filePath || null;
-          console.log('Resume loaded:', this.fileName);
-        } catch (error) {
-          console.error('Error parsing resume:', error);
-        }
-      }
-    }
+    await this.resumeService.loadResume();
   }
 }
