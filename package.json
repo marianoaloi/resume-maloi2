@@ -11,7 +11,7 @@
     "angular-serve": "cd angular-app && ng serve --port 4200",
     "build": "npm run angular-build && electron-builder",
     "build2": "npm run angular-build2 && npm version patch && electron-builder",
-    "install_win": "npm run2 build && '..\\dist\\Resume Builder Setup 1.0.0.exe'",
+    "install_win": "npm run build && '..\\dist\\Resume Builder Setup 1.0.0.exe'",
     "start": "concurrently \"npm run angular-serve\" \"npm run electron-dev\""
   },
   "keywords": [],

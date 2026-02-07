@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HtmlEditor } from '../html-editor/html-editor';
@@ -70,5 +70,21 @@ export class ExperienceSection {
 
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  scrollToBottom() {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
+  @HostListener('window:keydown.pageup', ['$event'])
+  onPageUp(event: Event) {
+    event.preventDefault();
+    this.scrollToTop();
+  }
+
+  @HostListener('window:keydown.pagedown', ['$event'])
+  onPageDown(event: Event) {
+    event.preventDefault();
+    this.scrollToBottom();
   }
 }
