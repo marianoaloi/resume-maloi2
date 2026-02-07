@@ -62,6 +62,22 @@
   margin: 0 4px;
 }
 
+.toolbar-spacer {
+  flex: 1;
+}
+
+.btn-close-editor {
+  background: #dc3545 !important;
+  color: white !important;
+  border-color: #dc3545 !important;
+  font-weight: bold;
+}
+
+.btn-close-editor:hover {
+  background: #c82333 !important;
+  border-color: #c82333 !important;
+}
+
 /* Lexical Content Editable */
 .lexical-content-editable {
   min-height: 200px;

@@ -27,6 +27,10 @@
       <button type="button" (click)="toggleLink()" title="Insert Link">
         🔗 Link
       </button>
+      <div class="toolbar-spacer"></div>
+      <button type="button" (click)="toggleEditMode()" class="btn-close-editor" title="Close editor">
+        ✕
+      </button>
       <div *ngIf="showLinkInput" class="link-input-container">
         <input type="text"
                [(ngModel)]="linkUrl"
