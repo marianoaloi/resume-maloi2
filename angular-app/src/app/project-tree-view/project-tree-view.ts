@@ -63,6 +63,18 @@ export class ProjectTreeView {
     return this.expandedProjects.has(`${companyIdx}-${projectIdx}`);
   }
 
+  expandAll() {
+    this.historicals.forEach((h, i) => {
+      this.expandedCompanies.add(i);
+      h.projects.forEach((_, pi) => this.expandedProjects.add(`${i}-${pi}`));
+    });
+  }
+
+  collapseAll() {
+    this.expandedCompanies.clear();
+    this.expandedProjects.clear();
+  }
+
   getFieldValue(project: Project): string {
     return project[this.selectedField];
   }

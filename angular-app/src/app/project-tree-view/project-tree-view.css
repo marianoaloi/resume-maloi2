@@ -52,6 +52,35 @@
   box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.tree-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-tree-action {
+  padding: 8px 16px;
+  border: 1px solid #dee2e6;
+  background: #f8f9fa;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #495057;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-tree-action:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
 .tree {
   background: white;
   border-radius: 15px;

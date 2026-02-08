@@ -1,13 +1,19 @@
 <div class="tree-view-container">
   <header class="tree-view-header">
     <h2>Project Field Overview</h2>
-    <div class="field-selector">
-      <label for="fieldSelect">Field to view:</label>
-      <select id="fieldSelect" [(ngModel)]="selectedField">
-        <option *ngFor="let opt of fieldOptions" [value]="opt.value">
-          {{ opt.label }}
-        </option>
-      </select>
+    <div class="header-controls">
+      <div class="field-selector">
+        <label for="fieldSelect">Field to view:</label>
+        <select id="fieldSelect" [(ngModel)]="selectedField">
+          <option *ngFor="let opt of fieldOptions" [value]="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+      </div>
+      <div class="tree-actions">
+        <button type="button" class="btn-tree-action" (click)="expandAll()" title="Expand all">&#9660;</button>
+        <button type="button" class="btn-tree-action" (click)="collapseAll()" title="Collapse all">&#9654;</button>
+      </div>
     </div>
   </header>
 
