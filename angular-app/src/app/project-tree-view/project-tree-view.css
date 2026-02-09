@@ -119,6 +119,44 @@
   background: #e4e8ff;
 }
 
+.project-dates {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.date-input {
+  width: 90px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #6c757d;
+  background: transparent;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.date-input:hover {
+  border-color: #dee2e6;
+  background: white;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #007bff;
+  background: white;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
+  color: #333;
+}
+
+.date-separator {
+  color: #adb5bd;
+  font-size: 12px;
+}
+
 .project-header {
   font-size: 14px;
   font-weight: 500;

@@ -29,9 +29,14 @@
       <!-- Project level -->
       <div *ngIf="isCompanyExpanded(ci)" class="tree-children">
         <div *ngFor="let project of historical.projects; let pi = index" class="tree-node project-node">
-          <div class="tree-node-header project-header" (click)="toggleProject(ci, pi)">
-            <span class="toggle-icon">{{ isProjectExpanded(ci, pi) ? '&#9660;' : '&#9654;' }}</span>
-            <span class="node-label">{{ project.name || 'Project ' + (pi + 1) }}</span>
+          <div class="tree-node-header project-header">
+            <span class="toggle-icon" (click)="toggleProject(ci, pi)">{{ isProjectExpanded(ci, pi) ? '&#9660;' : '&#9654;' }}</span>
+            <span class="node-label" (click)="toggleProject(ci, pi)">{{ project.name || 'Project ' + (pi + 1) }}</span>
+            <span class="project-dates" (click)="$event.stopPropagation()">
+              <input type="date" class="date-input" [ngModel]="longDateToDate(project.start)" (ngModelChange)="project.start = dateToLongDate($event)" placeholder="Start" />
+              <span class="date-separator">-</span>
+              <input type="date" class="date-input" [ngModel]="longDateToDate(project.end)" (ngModelChange)="project.end = dateToLongDate($event)" placeholder="End" />
+            </span>
           </div>
 
           <!-- Field editor level -->

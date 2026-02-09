@@ -59,6 +59,14 @@ export class ProjectTreeView {
     }
   }
 
+  dateToLongDate($event: any): string {
+    return new Date($event).toISOString();
+  }
+
+  longDateToDate(arg0: string | null): string | undefined {
+    return arg0 ? arg0.substring(0, 10) : undefined;
+  }
+
   isProjectExpanded(companyIdx: number, projectIdx: number): boolean {
     return this.expandedProjects.has(`${companyIdx}-${projectIdx}`);
   }
